@@ -191,8 +191,7 @@
       I am an M.Sc. Mechatronics student at <strong>FAU Erlangen–Nürnberg</strong>,
       currently preparing thesis applications. My interests sit at the
       intersection of <strong>deep learning, sequence modelling, and
-      physics-constrained systems</strong>: how to make learned models earn
-      their place inside a control loop without breaking the safety guarantees
+      physics-constrained systems</strong>: how to make learned models earn their place inside a control loop without breaking the safety guarantees
       a classical controller already provides. I work primarily in
       <strong>PyTorch</strong>.
     </p>
@@ -227,9 +226,9 @@
       <p>
         The answer, as I have read into the literature, looks like a
         layered system rather than a single black box. Surface EMG already
-        leads force output by 30–80&nbsp;ms (Sierotowicz, ICORR 2023), and
-        an existing energy-observer safety net (OBG-K, Panzirsch RA-L 2022)
-        catches the worst case. What seems to be missing is the middle
+        leads force output by 30–80&nbsp;ms (well documented in the sEMG-force literature), and
+        energy-observer safety nets from the teleoperation literature
+        catch the worst case. What seems to be missing is the middle
         layer: a learned model that explicitly predicts intent 100–500&nbsp;ms
         into the future, slotted in between the natural sEMG lead and the
         safety controller.
@@ -315,7 +314,7 @@
 
           <!-- Fallback -->
           <rect x="310" y="290" width="320" height="50" rx="8" fill="#FFF3E6" stroke="#C97400" stroke-width="1.4"/>
-          <text x="470" y="312" text-anchor="middle" font-weight="600" fill="#8A4A00">Fallback: energy-based safety controller (OBG-K)</text>
+          <text x="470" y="312" text-anchor="middle" font-weight="600" fill="#8A4A00">Fallback: classical energy-based safety controller</text>
           <text x="470" y="328" text-anchor="middle" fill="#8A4A00" font-style="italic" font-size="12">used when network is not confident</text>
 
           <!-- Loss -->
@@ -350,7 +349,7 @@
       <p>
         <strong>Trust the model, but verify.</strong> Uncertainty would be
         estimated with MC-Dropout. When confidence drops, the system
-        falls back to the classical OBG-K controller — the learned
+        falls back to a classical energy-based safety controller — the learned
         prediction is only used when it has earned it.
       </p>
 
@@ -388,4 +387,4 @@
   </footer>
 </main>
 </body>
-</html>
+></html>
