@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tianhao Wu — M.Sc. Mechatronics, FAU Erlangen-Nürnberg</title>
+  <meta name="description" content="Personal site of Tianhao Wu — M.Sc. Mechatronics student at FAU Erlangen-Nürnberg. Deep learning for signals, robotics, and 3D data; PyTorch, sequence models, physics-constrained learning." />
+  <meta property="og:title" content="Tianhao Wu — Mechatronics & Deep Learning, FAU" />
+  <meta property="og:description" content="Self-directed research notes and project sketches. PyTorch, sequence models, multi-modal sensor fusion, physics-constrained deep learning." />
+  <style>
+    :root {
+      --accent: #1F3A68;
+      --muted: #5b6473;
+      --bg: #ffffff;
+      --bg-soft: #f5f7fa;
+      --border: #e3e8ef;
+      --text: #1a2332;
+      --link: #1F3A68;
+      --code-bg: #f1f4f8;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --accent: #7aa6e0;
+        --muted: #9aa5b8;
+        --bg: #0f1419;
+        --bg-soft: #161b22;
+        --border: #2a3038;
+        --text: #e6edf3;
+        --link: #7aa6e0;
+        --code-bg: #1c232b;
+      }
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      color: var(--text);
+      background: var(--bg);
+    }
+    main {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 48px 24px 64px;
+    }
+    /* Header */
+    header.hero {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      margin-bottom: 36px;
+      padding-bottom: 28px;
+      border-bottom: 1px solid var(--border);
+    }
+    header.hero img.portrait {
+      width: 96px;
+      height: 96px;
+      border-radius: 50%;
+      object-fit: cover;
+      flex-shrink: 0;
+      border: 1px solid var(--border);
+    }
+    header.hero h1 {
+      margin: 0 0 4px;
+      font-size: 28px;
+      letter-spacing: -0.01em;
+      color: var(--accent);
+    }
+    header.hero .tagline {
+      margin: 0 0 6px;
+      color: var(--muted);
+    }
+    header.hero .contact {
+      margin: 0;
+      font-size: 14px;
+      color: var(--muted);
+    }
+    header.hero .contact a {
+      color: var(--link);
+      text-decoration: none;
+    }
+    header.hero .contact a:hover { text-decoration: underline; }
+
+    /* Sections */
+    section { margin-bottom: 40px; }
+    h2 {
+      font-size: 13px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 6px;
+      margin: 0 0 18px;
+    }
+    h3 {
+      font-size: 20px;
+      margin: 0 0 4px;
+      color: var(--text);
+    }
+    .post-meta {
+      font-size: 13px;
+      color: var(--muted);
+      margin: 0 0 18px;
+    }
+    p { margin: 0 0 14px; }
+    a { color: var(--link); }
+    strong { color: var(--text); }
+
+    /* Figure */
+    figure {
+      margin: 24px 0;
+      padding: 16px;
+      background: var(--bg-soft);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+    figure svg { width: 100%; height: auto; display: block; }
+    figcaption {
+      font-size: 13px;
+      color: var(--muted);
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    /* CV / link cards */
+    .links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .link-card {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 16px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      text-decoration: none;
+      color: var(--text);
+      background: var(--bg-soft);
+      font-size: 14px;
+      transition: border-color 0.15s ease, transform 0.15s ease;
+    }
+    .link-card:hover { border-color: var(--accent); transform: translateY(-1px); }
+    .link-card .arrow { color: var(--accent); }
+
+    /* Footer */
+    footer {
+      margin-top: 56px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+      font-size: 13px;
+      color: var(--muted);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    footer a { color: var(--link); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+
+    @media (max-width: 540px) {
+      header.hero { flex-direction: column; text-align: center; gap: 16px; }
+      main { padding: 32px 18px 48px; }
+      h1 { font-size: 24px; }
+    }
+  </style>
+</head>
+<body>
+<main>
+  <!-- HEADER -->
+  <header class="hero">
+    <img src="photo.png" alt="Portrait of Tianhao Wu" class="portrait" />
+    <div>
+      <h1>Tianhao Wu</h1>
+      <p class="tagline">M.Sc. Mechatronics, FAU Erlangen–Nürnberg</p>
+      <p class="contact">
+        <a href="mailto:Tianhao.Wu.Mechatronik@outlook.com">Tianhao.Wu.Mechatronik@outlook.com</a>
+        &nbsp;·&nbsp;
+        <a href="https://github.com/Tianhao1314">GitHub</a>
+      </p>
+    </div>
+  </header>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <h2>About</h2>
+    <p>
+      I am an M.Sc. Mechatronics student at <strong>FAU Erlangen–Nürnberg</strong>,
+      currently preparing thesis applications. My interests sit at the
+      intersection of <strong>deep learning, sequence modelling, and
+      physics-constrained systems</strong>: how to make learned models earn
+      their place inside a control loop without breaking the safety guarantees
+      a classical controller already provides. I work primarily in
+      <strong>PyTorch</strong>.
+    </p>
+  </section>
+
+  <!-- FEATURED POST -->
+  <section id="post">
+    <h2>Writing</h2>
+
+    <article>
+      <h3>Predicting What the Operator Means: A Design Sketch for Physics-Constrained Tele-Impedance Delay Compensation</h3>
+      <p class="post-meta">Self-directed study &mdash; written while preparing thesis applications, 2026</p>
+
+      <p>
+        <em>This is a research proposal I have been sketching on my own
+        while applying for thesis topics in this area. It is not an
+        ongoing project — there is no trained model yet. I worked it
+        through end-to-end as a way of stress-testing my own understanding
+        before submitting applications that ask exactly this kind of
+        question.</em>
+      </p>
+
+      <p>
+        In teleoperation, communication delays of 50–200&nbsp;ms are
+        unavoidable, and they make the remote robot react late to the
+        operator's intent. The question I keep coming back to:
+        <strong>can deep learning predict the operator's future trajectory
+        and joint stiffness from their surface EMG, far enough in advance
+        to mask that delay — without breaking safety guarantees?</strong>
+      </p>
+
+      <p>
+        The answer, as I have read into the literature, looks like a
+        layered system rather than a single black box. Surface EMG already
+        leads force output by 30–80&nbsp;ms (Sierotowicz, ICORR 2023), and
+        an existing energy-observer safety net (OBG-K, Panzirsch RA-L 2022)
+        catches the worst case. What seems to be missing is the middle
+        layer: a learned model that explicitly predicts intent 100–500&nbsp;ms
+        into the future, slotted in between the natural sEMG lead and the
+        safety controller.
+      </p>
+
+      <figure>
+        <!-- Inline architecture SVG. Also exported as architecture.svg for sharing. -->
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 380" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" font-size="13">
+          <defs>
+            <marker id="arrow2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" fill="currentColor"/>
+            </marker>
+            <marker id="arrow2-dashed" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M0,0 L10,5 L0,10 z" fill="#888"/>
+            </marker>
+          </defs>
+          <style>
+            .box { fill: var(--bg); stroke: var(--accent); stroke-width: 1.4; }
+            .box-soft { fill: var(--bg-soft); stroke: var(--accent); stroke-width: 1.4; }
+            .box-fill { fill: var(--accent); stroke: var(--accent); }
+            .lbl { fill: var(--text); font-weight: 600; }
+            .lbl-sub { fill: var(--muted); }
+            .lbl-fill { fill: #fff; font-weight: 600; }
+            .lbl-fill-sub { fill: rgba(255,255,255,0.8); }
+            .edge { stroke: var(--accent); stroke-width: 1.6; fill: none; }
+            .edge-dashed { stroke: #888; stroke-width: 1.4; fill: none; stroke-dasharray: 4 4; }
+            .title { fill: var(--accent); font-weight: 600; font-size: 15px; }
+            .annotation { fill: var(--muted); font-style: italic; }
+          </style>
+
+          <text x="480" y="28" text-anchor="middle" class="title">Physics-Constrained Prediction Network — sEMG → Future Trajectory &amp; Stiffness</text>
+
+          <!-- Input -->
+          <rect x="20" y="80" width="130" height="64" rx="8" class="box-soft"/>
+          <text x="85" y="105" text-anchor="middle" class="lbl">Input (14-dim)</text>
+          <text x="85" y="123" text-anchor="middle" class="lbl-sub">sEMG ×8</text>
+          <text x="85" y="138" text-anchor="middle" class="lbl-sub">pos ×3 · vel ×3</text>
+          <line x1="150" y1="112" x2="184" y2="112" class="edge" marker-end="url(#arrow2)" color="currentColor"/>
+
+          <!-- Encoder -->
+          <rect x="184" y="80" width="130" height="64" rx="8" class="box"/>
+          <text x="249" y="105" text-anchor="middle" class="lbl">Pre-trained</text>
+          <text x="249" y="123" text-anchor="middle" class="lbl">Encoder</text>
+          <text x="249" y="138" text-anchor="middle" class="lbl-sub">NinaPro · 40 subj.</text>
+          <line x1="314" y1="112" x2="348" y2="112" class="edge" marker-end="url(#arrow2)" color="currentColor"/>
+
+          <!-- Channel attention -->
+          <rect x="348" y="80" width="120" height="64" rx="8" class="box"/>
+          <text x="408" y="108" text-anchor="middle" class="lbl">Channel</text>
+          <text x="408" y="126" text-anchor="middle" class="lbl">Attention</text>
+          <line x1="468" y1="112" x2="502" y2="112" class="edge" marker-end="url(#arrow2)" color="currentColor"/>
+
+          <!-- LSTM -->
+          <rect x="502" y="80" width="130" height="64" rx="8" class="box-fill"/>
+          <text x="567" y="108" text-anchor="middle" class="lbl-fill">2-layer LSTM</text>
+          <text x="567" y="126" text-anchor="middle" class="lbl-fill-sub">hidden = 48</text>
+          <line x1="632" y1="112" x2="666" y2="112" class="edge" marker-end="url(#arrow2)" color="currentColor"/>
+
+          <!-- Temporal attention -->
+          <rect x="666" y="80" width="120" height="64" rx="8" class="box"/>
+          <text x="726" y="108" text-anchor="middle" class="lbl">Temporal</text>
+          <text x="726" y="126" text-anchor="middle" class="lbl">Attention</text>
+          <line x1="786" y1="112" x2="820" y2="112" class="edge" marker-end="url(#arrow2)" color="currentColor"/>
+
+          <!-- Softplus heads -->
+          <rect x="820" y="80" width="120" height="64" rx="8" class="box-soft"/>
+          <text x="880" y="105" text-anchor="middle" class="lbl">Softplus</text>
+          <text x="880" y="123" text-anchor="middle" class="lbl">heads</text>
+          <text x="880" y="138" text-anchor="middle" class="lbl-sub">K ≥ 0</text>
+
+          <!-- Output arrow downwards -->
+          <line x1="880" y1="144" x2="880" y2="186" class="edge" marker-end="url(#arrow2)" color="currentColor"/>
+
+          <!-- Output box -->
+          <rect x="700" y="186" width="240" height="64" rx="8" class="box"/>
+          <text x="820" y="210" text-anchor="middle" class="lbl">Future trajectory (3) + stiffness (3)</text>
+          <text x="820" y="230" text-anchor="middle" class="lbl-sub">100 – 500 ms ahead</text>
+          <text x="820" y="245" text-anchor="middle" class="annotation" font-size="12">(Δt = teleoperation latency)</text>
+
+          <!-- MC-Dropout branch -->
+          <path d="M700,218 Q500,218 470,218 L470,290" class="edge-dashed" marker-end="url(#arrow2-dashed)"/>
+          <text x="540" y="210" class="annotation">low-confidence (MC-Dropout)</text>
+
+          <!-- Fallback -->
+          <rect x="310" y="290" width="320" height="50" rx="8" fill="#FFF3E6" stroke="#C97400" stroke-width="1.4"/>
+          <text x="470" y="312" text-anchor="middle" font-weight="600" fill="#8A4A00">Fallback: energy-based safety controller (OBG-K)</text>
+          <text x="470" y="328" text-anchor="middle" fill="#8A4A00" font-style="italic" font-size="12">used when network is not confident</text>
+
+          <!-- Loss -->
+          <rect x="20" y="290" width="270" height="50" rx="8" fill="var(--bg-soft)" stroke="#888" stroke-width="1"/>
+          <text x="155" y="310" text-anchor="middle" class="lbl">Physics-informed loss</text>
+          <text x="155" y="328" text-anchor="middle" class="annotation" font-size="12">MSE + λ · ‖∂K/∂t‖² (bounded stiffness rate)</text>
+        </svg>
+        <figcaption>End-to-end architecture: a learned model occupies a precise gap between the natural sEMG lead and the classical safety controller.</figcaption>
+      </figure>
+
+      <p>
+        <strong>Architecture I sketched.</strong> A pre-trained encoder
+        (NinaPro, 40 subjects) consumes 8-channel sEMG plus position and
+        velocity (14-dim input). Channel attention reweights the muscle
+        channels; a 2-layer LSTM (hidden&nbsp;=&nbsp;48) tracks dynamics;
+        temporal attention summarises the recent window; softplus heads
+        produce the next trajectory and a positive-definite stiffness
+        vector. A physics-informed loss penalises the rate-of-change of
+        stiffness, so the model can't cheat by predicting wild swings.
+      </p>
+
+      <p>
+        <strong>Ablation plan.</strong> Before fixing the architecture, the
+        right move is a systematic comparison of five sequence models —
+        Linear, 1D-CNN, GRU, LSTM, TCN — and then ablations over hidden
+        size, depth, attention placement, and input modality (raw vs.
+        filtered sEMG, with vs.&nbsp;without position and velocity).
+        Pre-training would be followed by leave-one-subject-out
+        fine-tuning so that any cross-user numbers stay honest.
+      </p>
+
+      <p>
+        <strong>Trust the model, but verify.</strong> Uncertainty would be
+        estimated with MC-Dropout. When confidence drops, the system
+        falls back to the classical OBG-K controller — the learned
+        prediction is only used when it has earned it.
+      </p>
+
+      <p>
+        What I like about this problem is the cleanliness of the
+        separation: physics provides a hard prior (positive stiffness,
+        bounded rate-of-change), a classical controller provides a safety
+        floor, and deep learning fills a well-defined gap (a multi-step-ahead
+        horizon that adaptive filters can't reach). The point isn't
+        "deep learning everywhere" — it is deciding precisely <em>where</em>
+        in the loop a learned component earns its place. That kind of
+        decision-making, more than any single architecture, is what I
+        want to keep working on.
+      </p>
+    </article>
+  </section>
+
+  <!-- LINKS -->
+  <section id="links">
+    <h2>Links</h2>
+    <div class="links">
+      <a class="link-card" href="https://github.com/Tianhao1314">
+        <span>GitHub</span><span class="arrow">↗</span>
+      </a>
+      <a class="link-card" href="mailto:Tianhao.Wu.Mechatronik@outlook.com">
+        <span>Email</span><span class="arrow">↗</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div>&copy; 2026 Tianhao Wu &middot; Erlangen, Germany</div>
+    <div>Built as plain HTML &middot; <a href="https://github.com/Tianhao1314/Tianhao1314.github.io">source</a></div>
+  </footer>
+</main>
+</body>
+</html>
