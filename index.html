@@ -191,9 +191,42 @@
       I am an M.Sc. Mechatronics student at <strong>FAU Erlangen–Nürnberg</strong>,
       currently preparing thesis applications. My interests sit at the
       intersection of <strong>deep learning, sequence modelling, and
-      physics-constrained systems</strong>: how to make learned models earn their place inside a control loop without breaking the safety guarantees
+      physics-constrained systems</strong>: how to make learned models earn
+      their place inside a control loop without breaking the safety guarantees
       a classical controller already provides. I work primarily in
       <strong>PyTorch</strong>.
+    </p>
+  </section>
+
+  <!-- RESEARCH STATEMENT -->
+  <section id="research">
+    <h2>Research Statement</h2>
+    <p>
+      Working through a self-directed design-space study on sEMG-driven
+      impedance prediction taught me something I did not expect to find. The
+      architectural priors I tried &mdash; attention, physics-informed losses,
+      multi-modal inputs &mdash; genuinely improved prediction quality, and the
+      resulting models forecast trajectory and stiffness 100&ndash;200&nbsp;ms
+      ahead with millimeter-level error. The methods <em>worked</em>. But the
+      experience also exposed a deeper limitation: even a low-error learned
+      model, deployed in a real teleoperation loop, still has to defer to a
+      classical energy-based safety controller as a fallback &mdash; not because
+      the prediction is wrong, but because no one knows how to be accountable
+      for its decisions when the model itself is a black box.
+    </p>
+    <p>
+      That interpretability gap is what I now find most interesting.
+      Causality as a remedy feels too brittle: the world is too complex
+      to specify edge case by edge case what a learned model may infer. The
+      direction I find more honest is <strong>AI world models</strong>
+      &mdash; multi-modal, physically grounded predictive systems in which
+      the model&rsquo;s predicted future is itself observable, simulatable,
+      and checkable. If a prediction unfolds in 3D against a learned physics,
+      the question <em>&ldquo;is this prediction safe to act on?&rdquo;</em>
+      becomes answerable from the prediction itself, rather than delegated
+      to a classical filter bolted on beside it. That, more than any specific
+      architecture, is the direction I want to spend the next phase of my
+      research on.
     </p>
   </section>
 
@@ -364,6 +397,63 @@
         decision-making, more than any single architecture, is what I
         want to keep working on.
       </p>
+
+      <hr style="border:0; border-top:1px solid var(--border); margin: 28px 0;"/>
+
+      <h3>Toward AI World Models for Action-Time Prediction</h3>
+      <p class="post-meta">Self-directed reflection &mdash; building on the tele-impedance study, 2026</p>
+
+      <p>
+        A self-directed design-space study on sEMG-driven impedance prediction
+        left me with a question I keep returning to. The technical part went
+        smoothly: architectural priors &mdash; attention mechanisms,
+        physics-informed losses, multi-modal feature fusion &mdash; measurably
+        improved how well a sequence model could predict an operator&rsquo;s
+        future trajectory and stiffness. The LSTM variants reached
+        millimeter-level error 100&ndash;200&nbsp;ms ahead on a synthetic
+        peg-in-hole task; ablation showed the priors stack non-linearly
+        (helping LSTM by ~11&nbsp;% while hurting GRU by ~32&nbsp;%), and
+        MC-Dropout uncertainty separated confident predictions from uncertain
+        ones cleanly enough to gate downstream decisions.
+      </p>
+
+      <p>
+        The unsettling observation was about what comes <em>next</em>. Even
+        with a model that demonstrably predicts well, a real teleoperation
+        deployment cannot trust the prediction outright. It needs a classical,
+        mathematically tractable safety controller &mdash; an energy observer,
+        a passivity filter, something with a proof &mdash; to catch the case
+        the learned model gets wrong. The fallback exists not because the
+        prediction is bad, but because the model is opaque: no one knows how
+        to be accountable for what a black-box network <em>would do</em> in a
+        situation no one has thought through. We end up holding ourselves
+        back from the better-performing tool because the more honest tool can
+        sign its own work.
+      </p>
+
+      <p>
+        Causality as a fix &mdash; encoding what the model is &ldquo;allowed&rdquo;
+        to infer &mdash; feels structurally wrong to me. The world is too rich
+        to specify edge case by edge case; every constraint we add is one more
+        piece of brittle scaffolding. What I find more honest, and what I want
+        to spend the next phase of research on, is <strong>AI world models</strong>:
+        multi-modal predictive systems where the model&rsquo;s belief about the
+        future is itself a <em>physically grounded, observable, checkable
+        artefact</em>. If the predicted next half-second unfolds in 3D under
+        learned physics &mdash; rather than as a 6-dimensional vector emitted
+        from a hidden state &mdash; then &ldquo;is this prediction safe to act
+        on?&rdquo; can be answered by inspecting the prediction itself, not by
+        bolting an external filter onto it.
+      </p>
+
+      <p>
+        That reframing changes the problem from &ldquo;make the AI prediction
+        more interpretable&rdquo; to &ldquo;make the AI&rsquo;s <em>future</em>
+        the thing we inspect&rdquo;. I do not yet know which architectural family
+        &mdash; diffusion world models, predictive video transformers, learned
+        simulators, neural physics &mdash; does this best. But that is the
+        question I want to work on next.
+      </p>
     </article>
   </section>
 
@@ -387,4 +477,4 @@
   </footer>
 </main>
 </body>
-></html>
+</html>
