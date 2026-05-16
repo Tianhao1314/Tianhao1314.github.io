@@ -82,7 +82,7 @@
   <!-- Fallback box -->
   <g>
     <rect x="310" y="290" width="320" height="50" rx="8" fill="#FFF3E6" stroke="#C97400" stroke-width="1.4"/>
-    <text x="470" y="312" text-anchor="middle" font-weight="600" fill="#8A4A00">Fallback: energy-based safety controller (OBG-K)</text>
+    <text x="470" y="312" text-anchor="middle" font-weight="600" fill="#8A4A00">Fallback: classical energy-based safety controller</text>
     <text x="470" y="328" text-anchor="middle" fill="#8A4A00" font-style="italic" font-size="12">used when network is not confident</text>
   </g>
 
