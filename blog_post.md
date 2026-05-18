@@ -17,10 +17,10 @@ to mask that delay — without breaking safety guarantees?**
 The answer, as I have read into the literature, looks like a layered system
 rather than a single black box. Surface EMG already leads force output by
 30–80 ms (well documented in the sEMG-force literature), and energy-observer
-safety nets from the teleoperation literature catch the worst case. What
-seems to be missing is the middle layer: a learned model that explicitly
-predicts intent 100–500 ms into the future, slotted in between the natural
-sEMG lead and the safety controller.
+safety nets from the teleoperation literature catch the worst case. What seems to be
+missing is the middle layer: a learned model that explicitly predicts intent
+100–500 ms into the future, slotted in between the natural sEMG lead and the
+safety controller.
 
 ![Architecture diagram](architecture.svg)
 
@@ -41,8 +41,8 @@ fine-tuning so that any cross-user numbers stay honest.
 
 **Trust the model, but verify.** Uncertainty would be estimated with
 MC-Dropout. When confidence drops, the system falls back to a classical
-energy-based safety controller — the learned prediction is only used when it
-has earned it.
+energy-based safety controller — the learned prediction is only used when it has
+earned it.
 
 What I like about this problem is the cleanliness of the separation: physics
 provides a hard prior (positive stiffness, bounded rate-of-change), a

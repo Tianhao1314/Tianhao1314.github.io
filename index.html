@@ -124,6 +124,25 @@
       margin-top: 10px;
     }
 
+    /* Activity list */
+    .activity-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .activity-list li {
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 15px;
+      line-height: 1.55;
+    }
+    .activity-list li:last-child { border-bottom: none; }
+    .activity-list time {
+      color: var(--muted);
+      font-variant-numeric: tabular-nums;
+      margin-right: 4px;
+    }
+
     /* CV / link cards */
     .links {
       display: flex;
@@ -198,9 +217,26 @@
     </p>
     <p>
       Lately, my reading and thinking have been pulled toward
-      <strong>AI world models</strong> as a direction I want to explore
-      &mdash; see <em>Research Statement</em> below.
+      <strong>multimodal predictive systems</strong> as a direction I want
+      to explore &mdash; see <em>Research Statement</em> below.
     </p>
+  </section>
+
+  <!-- RECENT ACTIVITY -->
+  <section id="activity">
+    <h2>Recent activity</h2>
+    <ul class="activity-list">
+      <!-- NEW ENTRIES GO HERE. Newest on top. Format: <li><time datetime="YYYY-MM-DD">YYYY-MM-DD</time> &mdash; one-line description. <a href="...">link &rarr;</a></li> -->
+      <li>
+        <time datetime="2026-05-18">2026-05-18</time> &mdash; Reframed SINDy as dynamics discovery + forward integration in the sEMG impedance project; sparse polynomial predictions beat LSTM at short horizons. <a href="https://github.com/Tianhao1314/semg-impedance-prediction">repo &rarr;</a>
+      </li>
+      <li>
+        <time datetime="2026-05-17">2026-05-17</time> &mdash; Posted a self-directed reflection on multimodal predictive systems for action-time prediction (<a href="#notes">below</a>).
+      </li>
+      <li>
+        <time datetime="2026-05-16">2026-05-16</time> &mdash; Published an open-source design-space study on sEMG-driven impedance prediction (5 models &times; 3 horizons, ablations + MC-Dropout safety). <a href="https://github.com/Tianhao1314/semg-impedance-prediction">repo &rarr;</a>
+      </li>
+    </ul>
   </section>
 
   <!-- RESEARCH STATEMENT -->
@@ -224,10 +260,10 @@
       Causality as a remedy feels too brittle: the world is too complex
       to specify edge case by edge case what a learned model may infer.
       The direction I keep being drawn toward &mdash; and I want to be
-      upfront, it is a large research area I am only beginning to read
-      into &mdash; is <strong>AI world models</strong>: multi-modal,
-      physically grounded predictive systems in which the model&rsquo;s
-      predicted future is itself observable, simulatable, and checkable.
+      upfront, it is an area I am only beginning to read into &mdash; is
+      <strong>multimodal predictive systems</strong> in which the
+      model&rsquo;s predicted future is itself physically grounded,
+      observable, simulatable, and checkable.
       If a prediction unfolds in 3D against a learned physics, the
       question <em>&ldquo;is this prediction safe to act on?&rdquo;</em>
       becomes answerable from the prediction itself, rather than delegated
@@ -237,13 +273,67 @@
     </p>
   </section>
 
-  <!-- FEATURED POST -->
-  <section id="post">
-    <h2>Writing</h2>
+  <!-- NOTES -->
+  <section id="notes">
+    <h2>Notes</h2>
+    <p style="color: var(--muted); font-style: italic; margin-bottom: 24px;">
+      Not quite a blog. Just a place to leave the occasional write-up of
+      where my research thinking is, so I can point to it next time
+      someone asks.
+    </p>
 
     <article>
+      <h3>Discovering equations vs fitting them: a SINDy follow-up</h3>
+      <p class="post-meta">2026-05-18 &mdash; sEMG impedance prediction, update</p>
+
+      <p>
+        I went back to the same simulated peg-in-hole data and put
+        <strong>SINDy</strong> in the comparison, this time the way it
+        is actually meant to be used: learn the differential equations
+        <code>d(state)/dt = f(state, sEMG)</code> directly from data,
+        keep only the sparse terms via Lasso, and integrate the current
+        state forward to the prediction horizon. Not static regression.
+      </p>
+
+      <p>
+        The result inverted my expectation. On position error,
+        <strong>SINDy gives 3.9&nbsp;mm at 50&nbsp;ms and 7.0&nbsp;mm
+        at 100&nbsp;ms</strong> &mdash; roughly twice as good as the
+        next method (Ridge) at both windows. ESN takes over at
+        200&nbsp;ms with 10.6&nbsp;mm. On stiffness, SINDy is best at
+        every horizon. LSTM, with ~32&nbsp;k parameters against
+        ~3&nbsp;k training samples, finishes last across the board
+        (22&ndash;24&nbsp;mm) &mdash; the textbook overfitting regime,
+        and simulation does not produce the kind of long-tail
+        nonlinearity that would force a network to earn its capacity.
+      </p>
+
+      <p>
+        What I keep coming back to is not the numbers. It is the
+        artefact: SINDy keeps <em>1 nonzero term</em> in
+        <code>dx/dt</code>, 5 in <code>dy/dt</code>, 3 in
+        <code>dz/dt</code>, and 11&ndash;12 in each stiffness component.
+        These are <strong>sparse polynomials a human can read</strong>.
+        I can print the equation, change one coefficient, see the
+        effect. That is a different research object than the hidden
+        state of an LSTM.
+      </p>
+
+      <p>
+        Where this leaves me: when data is consistent with a compact
+        set of equations, <em>finding</em> those equations is more
+        honest than fitting an input-output map. Whether real
+        human-in-the-loop sEMG behaves that way is the next thing I want
+        to find out. Code and full numbers:
+        <a href="https://github.com/Tianhao1314/semg-impedance-prediction">
+          semg-impedance-prediction
+        </a> on GitHub.
+      </p>
+
+      <hr style="border:0; border-top:1px solid var(--border); margin: 28px 0;"/>
+
       <h3>Predicting What the Operator Means: A Design Sketch for Physics-Constrained Tele-Impedance Delay Compensation</h3>
-      <p class="post-meta">Self-directed study &mdash; written while preparing thesis applications, 2026</p>
+      <p class="post-meta">2026-05-15 &mdash; self-directed study, written while preparing thesis applications</p>
 
       <p>
         <em>This is a research proposal I have been sketching on my own
@@ -407,8 +497,8 @@
 
       <hr style="border:0; border-top:1px solid var(--border); margin: 28px 0;"/>
 
-      <h3>Toward AI World Models for Action-Time Prediction</h3>
-      <p class="post-meta">Self-directed reflection &mdash; building on the tele-impedance study, 2026</p>
+      <h3>Toward Multimodal Predictive Systems for Action-Time Prediction</h3>
+      <p class="post-meta">2026-05-17 &mdash; self-directed reflection, building on the tele-impedance study</p>
 
       <p>
         A self-directed design-space study on sEMG-driven impedance prediction
@@ -443,11 +533,10 @@
         to infer &mdash; feels structurally wrong to me. The world is too rich
         to specify edge case by edge case; every constraint we add is one more
         piece of brittle scaffolding. The direction that pulls me &mdash; and
-        I want to be honest, it is a large area I am only beginning to read
-        into &mdash; is <strong>AI world models</strong>: multi-modal
-        predictive systems where the model&rsquo;s belief about the future
-        is itself a <em>physically grounded, observable, checkable
-        artefact</em>. If the predicted next half-second unfolds in 3D under
+        I want to be honest, it is an area I am only beginning to read
+        into &mdash; is <strong>multimodal predictive systems</strong>
+        where the model&rsquo;s belief about the future is itself a
+        <em>physically grounded, observable, checkable artefact</em>. If the predicted next half-second unfolds in 3D under
         learned physics &mdash; rather than as a 6-dimensional vector emitted
         from a hidden state &mdash; then &ldquo;is this prediction safe to act
         on?&rdquo; can be answered by inspecting the prediction itself, not by
@@ -458,9 +547,9 @@
         That reframing changes the problem from &ldquo;make the AI prediction
         more interpretable&rdquo; to &ldquo;make the AI&rsquo;s <em>future</em>
         the thing we inspect&rdquo;. I do not pretend to know which architectural
-        family &mdash; diffusion world models, predictive video transformers,
-        learned simulators, neural physics &mdash; does this best, or even
-        whether the framing survives contact with a real dataset. But that
+        family &mdash; diffusion priors, video transformers, learned simulators,
+        neural physics &mdash; does this best, or even whether the framing
+        survives contact with a real dataset. But that
         is exactly why it is the direction I want to spend the next phase
         exploring.
       </p>

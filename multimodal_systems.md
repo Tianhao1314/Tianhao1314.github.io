@@ -1,4 +1,4 @@
-# Toward AI World Models for Action-Time Prediction
+# Toward Multimodal Predictive Systems for Action-Time Prediction
 
 *Self-directed reflection — building on the tele-impedance study, 2026.*
 
@@ -27,19 +27,18 @@ honest tool can sign its own work.
 Causality as a fix — encoding what the model is "allowed" to infer — feels
 structurally wrong to me. The world is too rich to specify edge case by
 edge case; every constraint we add is one more piece of brittle scaffolding.
-The direction that pulls me — and I want to be honest, it is a large area
-I am only beginning to read into — is **AI world models**: multi-modal
-predictive systems where the model's belief about the future is itself a
-*physically grounded, observable, checkable artefact*. If the predicted
-next half-second unfolds in 3D under learned physics — rather than as a
-6-dimensional vector emitted from a hidden state — then "is this prediction
-safe to act on?" can be answered by inspecting the prediction itself, not
-by bolting an external filter onto it.
+The direction that pulls me — and I want to be honest, it is an area I am
+only beginning to read into — is **multimodal predictive systems** where
+the model's belief about the future is itself a *physically grounded,
+observable, checkable artefact*. If the predicted next half-second unfolds
+in 3D under learned physics — rather than as a 6-dimensional vector emitted
+from a hidden state — then "is this prediction safe to act on?" can be
+answered by inspecting the prediction itself, not by bolting an external
+filter onto it.
 
 That reframing changes the problem from "make the AI prediction more
 interpretable" to "make the AI's *future* the thing we inspect". I do not
-pretend to know which architectural family — diffusion world models,
-predictive video transformers, learned simulators, neural physics — does
-this best, or even whether the framing survives contact with a real
-dataset. But that is exactly why it is the direction I want to spend the
-next phase exploring.
+pretend to know which architectural family — diffusion priors, video
+transformers, learned simulators, neural physics — does this best, or even
+whether the framing survives contact with a real dataset. But that is
+exactly why it is the direction I want to spend the next phase exploring.
