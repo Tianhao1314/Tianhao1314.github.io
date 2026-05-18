@@ -143,6 +143,33 @@
       margin-right: 4px;
     }
 
+    /* Collapsible Recent activity — visually identical to h2, click to expand */
+    .activity-collapse > summary {
+      font-size: 13px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 6px;
+      margin: 0 0 18px;
+      cursor: pointer;
+      list-style: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      user-select: none;
+    }
+    .activity-collapse > summary::-webkit-details-marker { display: none; }
+    .activity-collapse > summary::before {
+      content: "\25B8"; /* ▸ */
+      display: inline-block;
+      font-size: 11px;
+      color: var(--muted);
+      transition: transform 0.15s ease;
+    }
+    .activity-collapse[open] > summary::before { transform: rotate(90deg); }
+    .activity-collapse > summary:hover { opacity: 0.85; }
+
     /* CV / link cards */
     .links {
       display: flex;
@@ -224,19 +251,21 @@
 
   <!-- RECENT ACTIVITY -->
   <section id="activity">
-    <h2>Recent activity</h2>
-    <ul class="activity-list">
-      <!-- NEW ENTRIES GO HERE. Newest on top. Format: <li><time datetime="YYYY-MM-DD">YYYY-MM-DD</time> &mdash; one-line description. <a href="...">link &rarr;</a></li> -->
-      <li>
-        <time datetime="2026-05-18">2026-05-18</time> &mdash; Reframed SINDy as dynamics discovery + forward integration in the sEMG impedance project; sparse polynomial predictions beat LSTM at short horizons. <a href="https://github.com/Tianhao1314/semg-impedance-prediction">repo &rarr;</a>
-      </li>
-      <li>
-        <time datetime="2026-05-17">2026-05-17</time> &mdash; Posted a self-directed reflection on multimodal predictive systems for action-time prediction (<a href="#notes">below</a>).
-      </li>
-      <li>
-        <time datetime="2026-05-16">2026-05-16</time> &mdash; Published an open-source design-space study on sEMG-driven impedance prediction (5 models &times; 3 horizons, ablations + MC-Dropout safety). <a href="https://github.com/Tianhao1314/semg-impedance-prediction">repo &rarr;</a>
-      </li>
-    </ul>
+    <details class="activity-collapse">
+      <summary>Recent activity</summary>
+      <ul class="activity-list">
+        <!-- NEW ENTRIES GO HERE. Newest on top. Format: <li><time datetime="YYYY-MM-DD">YYYY-MM-DD</time> &mdash; one-line description. <a href="...">link &rarr;</a></li> -->
+        <li>
+          <time datetime="2026-05-18">2026-05-18</time> &mdash; Reframed SINDy as dynamics discovery + forward integration in the sEMG impedance project; sparse polynomial predictions beat LSTM at short horizons. <a href="https://github.com/Tianhao1314/semg-impedance-prediction">repo &rarr;</a>
+        </li>
+        <li>
+          <time datetime="2026-05-17">2026-05-17</time> &mdash; Posted a self-directed reflection on multimodal predictive systems for action-time prediction (<a href="#notes">below</a>).
+        </li>
+        <li>
+          <time datetime="2026-05-16">2026-05-16</time> &mdash; Published an open-source design-space study on sEMG-driven impedance prediction (5 models &times; 3 horizons, ablations + MC-Dropout safety). <a href="https://github.com/Tianhao1314/semg-impedance-prediction">repo &rarr;</a>
+        </li>
+      </ul>
+    </details>
   </section>
 
   <!-- RESEARCH STATEMENT -->
