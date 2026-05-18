@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 440" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif">
+  <style>
+    .title { fill: #1a2332; font-size: 17px; font-weight: 600; }
+    .subtitle { fill: #5b6473; font-size: 13px; }
+    .axis-line { stroke: #374151; stroke-width: 1; fill: none; }
+    .axis-text { fill: #5b6473; font-size: 12px; }
+    .value-label { fill: #1a2332; font-size: 12px; }
+    .grid { stroke: #e5e7eb; stroke-width: 0.5; stroke-dasharray: 3,3; fill: none; }
+    .group-label { fill: #1a2332; font-size: 14px; font-weight: 500; }
+    .legend-text { fill: #1a2332; font-size: 13px; }
+    .star { fill: #d97706; font-weight: 700; }
+    @media (prefers-color-scheme: dark) {
+      .title, .group-label, .legend-text, .value-label { fill: #e6edf3; }
+      .subtitle, .axis-text { fill: #9aa5b8; }
+      .axis-line { stroke: #9aa5b8; }
+      .grid { stroke: #2a3038; }
+    }
+  </style>
+
+  <text x="480" y="32" text-anchor="middle" class="title">Position prediction error (mm) — design-space follow-up</text>
+  <text x="480" y="54" text-anchor="middle" class="subtitle">Synthetic peg-in-hole, same train/test split. Lower is better. ★ best at horizon.</text>
+
+  <!-- Plot area: x [100, 880], y [80, 320]. Y scale 0–30 mm; 1 mm = 8 px. -->
+  <line x1="100" y1="80"  x2="100" y2="320" class="axis-line"/>
+  <line x1="100" y1="320" x2="880" y2="320" class="axis-line"/>
+
+  <!-- Y gridlines + tick labels -->
+  <g class="axis-text" text-anchor="end">
+    <line x1="100" y1="80"  x2="880" y2="80"  class="grid"/><text x="92" y="85">30</text>
+    <line x1="100" y1="120" x2="880" y2="120" class="grid"/><text x="92" y="125">25</text>
+    <line x1="100" y1="160" x2="880" y2="160" class="grid"/><text x="92" y="165">20</text>
+    <line x1="100" y1="200" x2="880" y2="200" class="grid"/><text x="92" y="205">15</text>
+    <line x1="100" y1="240" x2="880" y2="240" class="grid"/><text x="92" y="245">10</text>
+    <line x1="100" y1="280" x2="880" y2="280" class="grid"/><text x="92" y="285">5</text>
+    <text x="92" y="325">0</text>
+  </g>
+  <text x="55" y="200" text-anchor="middle" class="axis-text" transform="rotate(-90 55 200)">mean position error (mm)</text>
+
+  <!-- 50 ms group (center x=260; bar w=36, gap=6, group w=162; first bar x=179) -->
+  <rect x="179" y="288.8" width="36" height="31.2"  fill="#2563eb"/>
+  <text x="197" y="283.8" text-anchor="middle" class="value-label" font-weight="600">3.9 <tspan class="star">★</tspan></text>
+  <rect x="221" y="250.4" width="36" height="69.6"  fill="#6b7280"/>
+  <text x="239" y="245.4" text-anchor="middle" class="value-label">8.7</text>
+  <rect x="263" y="242.4" width="36" height="77.6"  fill="#d97706"/>
+  <text x="281" y="237.4" text-anchor="middle" class="value-label">9.7</text>
+  <rect x="305" y="144"   width="36" height="176"   fill="#dc2626"/>
+  <text x="323" y="139"   text-anchor="middle" class="value-label">22.0</text>
+  <text x="260" y="345" text-anchor="middle" class="group-label">50 ms</text>
+
+  <!-- 100 ms group (center x=490) -->
+  <rect x="409" y="264"   width="36" height="56"    fill="#2563eb"/>
+  <text x="427" y="259"   text-anchor="middle" class="value-label" font-weight="600">7.0 <tspan class="star">★</tspan></text>
+  <rect x="451" y="242.4" width="36" height="77.6"  fill="#6b7280"/>
+  <text x="469" y="237.4" text-anchor="middle" class="value-label">9.7</text>
+  <rect x="493" y="234.4" width="36" height="85.6"  fill="#d97706"/>
+  <text x="511" y="229.4" text-anchor="middle" class="value-label">10.7</text>
+  <rect x="535" y="132.8" width="36" height="187.2" fill="#dc2626"/>
+  <text x="553" y="127.8" text-anchor="middle" class="value-label">23.4</text>
+  <text x="490" y="345" text-anchor="middle" class="group-label">100 ms</text>
+
+  <!-- 200 ms group (center x=720) -->
+  <rect x="639" y="220.8" width="36" height="99.2"  fill="#2563eb"/>
+  <text x="657" y="215.8" text-anchor="middle" class="value-label">12.4</text>
+  <rect x="681" y="223.2" width="36" height="96.8"  fill="#6b7280"/>
+  <text x="699" y="218.2" text-anchor="middle" class="value-label">12.1</text>
+  <rect x="723" y="235.2" width="36" height="84.8"  fill="#d97706"/>
+  <text x="741" y="230.2" text-anchor="middle" class="value-label" font-weight="600">10.6 <tspan class="star">★</tspan></text>
+  <rect x="765" y="125.6" width="36" height="194.4" fill="#dc2626"/>
+  <text x="783" y="120.6" text-anchor="middle" class="value-label">24.3</text>
+  <text x="720" y="345" text-anchor="middle" class="group-label">200 ms</text>
+
+  <text x="490" y="380" text-anchor="middle" class="axis-text">prediction horizon</text>
+
+  <!-- Legend -->
+  <g class="legend-text">
+    <rect x="195" y="402" width="16" height="14" fill="#2563eb"/><text x="217" y="414">SINDy (dynamics discovery)</text>
+    <rect x="440" y="402" width="16" height="14" fill="#6b7280"/><text x="462" y="414">Ridge</text>
+    <rect x="520" y="402" width="16" height="14" fill="#d97706"/><text x="542" y="414">ESN</text>
+    <rect x="585" y="402" width="16" height="14" fill="#dc2626"/><text x="607" y="414">LSTM</text>
+  </g>
+</svg>

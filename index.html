@@ -527,49 +527,133 @@
       <hr style="border:0; border-top:1px solid var(--border); margin: 28px 0;"/>
 
       <h3>Toward Multimodal Predictive Systems for Action-Time Prediction</h3>
-      <p class="post-meta">2026-05-17 &mdash; self-directed reflection, building on the tele-impedance study</p>
+      <p class="post-meta">2026-05-17 (updated 2026-05-18) &mdash; self-directed reflection, building on the SINDy follow-up</p>
 
       <p>
-        A self-directed design-space study on sEMG-driven impedance prediction
-        left me with a question I keep returning to. The technical part went
-        smoothly: architectural priors &mdash; attention mechanisms,
-        physics-informed losses, multi-modal feature fusion &mdash; measurably
-        improved how well a sequence model could predict an operator&rsquo;s
-        future trajectory and stiffness. The LSTM variants reached
-        millimeter-level error 100&ndash;200&nbsp;ms ahead on a synthetic
-        peg-in-hole task; ablation showed the priors stack non-linearly
-        (helping LSTM by ~11&nbsp;% while hurting GRU by ~32&nbsp;%), and
-        MC-Dropout uncertainty separated confident predictions from uncertain
-        ones cleanly enough to gate downstream decisions.
+        The SINDy follow-up on the sEMG impedance design-space study (see
+        <em>Discovering equations vs fitting them</em> above) left me with a
+        sharper version of a question I had only been gesturing at before. The
+        follow-up replaced LSTM-with-architectural-priors as the protagonist
+        with <strong>SINDy used as a dynamics learner</strong> &mdash; learn
+        <code>d(state)/dt = f(state, sEMG)</code> from data, keep only sparse
+        terms via Lasso, integrate forward to the target horizon. On the same
+        synthetic peg-in-hole data, SINDy gave 3.9&nbsp;mm at 50&nbsp;ms and
+        7.0&nbsp;mm at 100&nbsp;ms &mdash; roughly twice as good as the next
+        method &mdash; while LSTM, with ~32&nbsp;k parameters against ~3&nbsp;k
+        samples, finished last across the board.
+      </p>
+
+      <figure>
+        <!-- Inline results SVG. Also exported as results.svg for sharing. -->
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 440" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif">
+          <style>
+            .rs-title { fill: #1a2332; font-size: 17px; font-weight: 600; }
+            .rs-subtitle { fill: #5b6473; font-size: 13px; }
+            .rs-axis-line { stroke: #374151; stroke-width: 1; fill: none; }
+            .rs-axis-text { fill: #5b6473; font-size: 12px; }
+            .rs-value-label { fill: #1a2332; font-size: 12px; }
+            .rs-grid { stroke: #e5e7eb; stroke-width: 0.5; stroke-dasharray: 3,3; fill: none; }
+            .rs-group-label { fill: #1a2332; font-size: 14px; font-weight: 500; }
+            .rs-legend-text { fill: #1a2332; font-size: 13px; }
+            .rs-star { fill: #d97706; font-weight: 700; }
+            @media (prefers-color-scheme: dark) {
+              .rs-title, .rs-group-label, .rs-legend-text, .rs-value-label { fill: #e6edf3; }
+              .rs-subtitle, .rs-axis-text { fill: #9aa5b8; }
+              .rs-axis-line { stroke: #9aa5b8; }
+              .rs-grid { stroke: #2a3038; }
+            }
+          </style>
+          <text x="480" y="32" text-anchor="middle" class="rs-title">Position prediction error (mm) — design-space follow-up</text>
+          <text x="480" y="54" text-anchor="middle" class="rs-subtitle">Synthetic peg-in-hole, same train/test split. Lower is better. ★ best at horizon.</text>
+          <line x1="100" y1="80"  x2="100" y2="320" class="rs-axis-line"/>
+          <line x1="100" y1="320" x2="880" y2="320" class="rs-axis-line"/>
+          <g class="rs-axis-text" text-anchor="end">
+            <line x1="100" y1="80"  x2="880" y2="80"  class="rs-grid"/><text x="92" y="85">30</text>
+            <line x1="100" y1="120" x2="880" y2="120" class="rs-grid"/><text x="92" y="125">25</text>
+            <line x1="100" y1="160" x2="880" y2="160" class="rs-grid"/><text x="92" y="165">20</text>
+            <line x1="100" y1="200" x2="880" y2="200" class="rs-grid"/><text x="92" y="205">15</text>
+            <line x1="100" y1="240" x2="880" y2="240" class="rs-grid"/><text x="92" y="245">10</text>
+            <line x1="100" y1="280" x2="880" y2="280" class="rs-grid"/><text x="92" y="285">5</text>
+            <text x="92" y="325">0</text>
+          </g>
+          <text x="55" y="200" text-anchor="middle" class="rs-axis-text" transform="rotate(-90 55 200)">mean position error (mm)</text>
+          <!-- 50 ms -->
+          <rect x="179" y="288.8" width="36" height="31.2"  fill="#2563eb"/>
+          <text x="197" y="283.8" text-anchor="middle" class="rs-value-label" font-weight="600">3.9 <tspan class="rs-star">★</tspan></text>
+          <rect x="221" y="250.4" width="36" height="69.6"  fill="#6b7280"/>
+          <text x="239" y="245.4" text-anchor="middle" class="rs-value-label">8.7</text>
+          <rect x="263" y="242.4" width="36" height="77.6"  fill="#d97706"/>
+          <text x="281" y="237.4" text-anchor="middle" class="rs-value-label">9.7</text>
+          <rect x="305" y="144"   width="36" height="176"   fill="#dc2626"/>
+          <text x="323" y="139"   text-anchor="middle" class="rs-value-label">22.0</text>
+          <text x="260" y="345" text-anchor="middle" class="rs-group-label">50 ms</text>
+          <!-- 100 ms -->
+          <rect x="409" y="264"   width="36" height="56"    fill="#2563eb"/>
+          <text x="427" y="259"   text-anchor="middle" class="rs-value-label" font-weight="600">7.0 <tspan class="rs-star">★</tspan></text>
+          <rect x="451" y="242.4" width="36" height="77.6"  fill="#6b7280"/>
+          <text x="469" y="237.4" text-anchor="middle" class="rs-value-label">9.7</text>
+          <rect x="493" y="234.4" width="36" height="85.6"  fill="#d97706"/>
+          <text x="511" y="229.4" text-anchor="middle" class="rs-value-label">10.7</text>
+          <rect x="535" y="132.8" width="36" height="187.2" fill="#dc2626"/>
+          <text x="553" y="127.8" text-anchor="middle" class="rs-value-label">23.4</text>
+          <text x="490" y="345" text-anchor="middle" class="rs-group-label">100 ms</text>
+          <!-- 200 ms -->
+          <rect x="639" y="220.8" width="36" height="99.2"  fill="#2563eb"/>
+          <text x="657" y="215.8" text-anchor="middle" class="rs-value-label">12.4</text>
+          <rect x="681" y="223.2" width="36" height="96.8"  fill="#6b7280"/>
+          <text x="699" y="218.2" text-anchor="middle" class="rs-value-label">12.1</text>
+          <rect x="723" y="235.2" width="36" height="84.8"  fill="#d97706"/>
+          <text x="741" y="230.2" text-anchor="middle" class="rs-value-label" font-weight="600">10.6 <tspan class="rs-star">★</tspan></text>
+          <rect x="765" y="125.6" width="36" height="194.4" fill="#dc2626"/>
+          <text x="783" y="120.6" text-anchor="middle" class="rs-value-label">24.3</text>
+          <text x="720" y="345" text-anchor="middle" class="rs-group-label">200 ms</text>
+          <text x="490" y="380" text-anchor="middle" class="rs-axis-text">prediction horizon</text>
+          <g class="rs-legend-text">
+            <rect x="195" y="402" width="16" height="14" fill="#2563eb"/><text x="217" y="414">SINDy (dynamics discovery)</text>
+            <rect x="440" y="402" width="16" height="14" fill="#6b7280"/><text x="462" y="414">Ridge</text>
+            <rect x="520" y="402" width="16" height="14" fill="#d97706"/><text x="542" y="414">ESN</text>
+            <rect x="585" y="402" width="16" height="14" fill="#dc2626"/><text x="607" y="414">LSTM</text>
+          </g>
+        </svg>
+        <figcaption>Position error on the same train/test split. SINDy wins by ~2&times; at short horizons; ESN takes over at 200&nbsp;ms; LSTM finishes last at every horizon.</figcaption>
+      </figure>
+
+      <p>
+        The numbers matter, but what stuck with me is the <strong>artefact</strong>.
+        SINDy keeps <em>1 nonzero term</em> in <code>dx/dt</code>, 5 in
+        <code>dy/dt</code>, 3 in <code>dz/dt</code>. The full prediction model
+        fits on one page; each equation is a sparse polynomial a human can read,
+        falsify, and retrain in seconds. When the prediction is wrong at
+        200&nbsp;ms, you can look at the equation and tell where the assumption
+        broke. That is a qualitatively different research object from the hidden
+        state of a recurrent network.
       </p>
 
       <p>
-        The unsettling observation was about what comes <em>next</em>. Even
-        with a model that demonstrably predicts well, a real teleoperation
-        deployment cannot trust the prediction outright. It needs a classical,
-        mathematically tractable safety controller &mdash; an energy observer,
-        a passivity filter, something with a proof &mdash; to catch the case
-        the learned model gets wrong. The fallback exists not because the
-        prediction is bad, but because the model is opaque: no one knows how
-        to be accountable for what a black-box network <em>would do</em> in a
-        situation no one has thought through. We end up holding ourselves
-        back from the better-performing tool because the more honest tool can
-        sign its own work.
+        This is what reframes the original &ldquo;safety fallback&rdquo; problem
+        for me. The earlier instinct was that even a low-error learned model has
+        to defer to a classical, energy-based safety controller as a backup,
+        because no one knows how to be accountable for what a black box would
+        do in a situation no one has thought through. Causality as a fix &mdash;
+        encoding what the model is &ldquo;allowed&rdquo; to infer &mdash; felt
+        structurally wrong; the world is too rich to specify edge case by edge
+        case. But the SINDy result points to a third path: don&rsquo;t bolt an
+        interpretability layer onto a black-box prediction, don&rsquo;t try to
+        constrain it from the outside &mdash; make the <strong>prediction object
+        itself</strong> something you can inspect.
       </p>
 
       <p>
-        Causality as a fix &mdash; encoding what the model is &ldquo;allowed&rdquo;
-        to infer &mdash; feels structurally wrong to me. The world is too rich
-        to specify edge case by edge case; every constraint we add is one more
-        piece of brittle scaffolding. The direction that pulls me &mdash; and
-        I want to be honest, it is an area I am only beginning to read
-        into &mdash; is <strong>multimodal predictive systems</strong>
-        where the model&rsquo;s belief about the future is itself a
-        <em>physically grounded, observable, checkable artefact</em>. If the predicted next half-second unfolds in 3D under
-        learned physics &mdash; rather than as a 6-dimensional vector emitted
-        from a hidden state &mdash; then &ldquo;is this prediction safe to act
-        on?&rdquo; can be answered by inspecting the prediction itself, not by
-        bolting an external filter onto it.
+        The direction that pulls me &mdash; and I want to be upfront, it is an
+        area I am only beginning to read into &mdash; is <strong>multimodal
+        predictive systems</strong> in which the model&rsquo;s belief about the
+        future is itself a physically grounded, observable, checkable artefact.
+        Sparse-polynomial discovery from sensor data is one minimal example: a
+        200&nbsp;ms prediction is a few lines of algebra you can step through.
+        Learned physical simulators are another: a predicted half-second unfolds
+        in 3D and you watch it. They share the property that <em>&ldquo;is this
+        prediction safe to act on?&rdquo;</em> can be answered by inspecting the
+        prediction itself, not by adding an external filter beside it.
       </p>
 
       <p>
@@ -577,10 +661,10 @@
         more interpretable&rdquo; to &ldquo;make the AI&rsquo;s <em>future</em>
         the thing we inspect&rdquo;. I do not pretend to know which architectural
         family &mdash; diffusion priors, video transformers, learned simulators,
-        neural physics &mdash; does this best, or even whether the framing
-        survives contact with a real dataset. But that
-        is exactly why it is the direction I want to spend the next phase
-        exploring.
+        neural physics &mdash; does this best, or whether the framing survives
+        contact with real human sEMG, which has cross-talk, fatigue drift, and
+        motion artifacts the simulator does not produce. The next phase is to
+        find out. That is exactly why it is the direction I want to spend it on.
       </p>
     </article>
   </section>
