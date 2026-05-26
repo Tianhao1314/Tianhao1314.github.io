@@ -256,6 +256,9 @@
       <ul class="activity-list">
         <!-- NEW ENTRIES GO HERE. Newest on top. Format: <li><time datetime="YYYY-MM-DD">YYYY-MM-DD</time> &mdash; one-line description. <a href="...">link &rarr;</a></li> -->
         <li>
+          <time datetime="2026-05-26">2026-05-26</time> &mdash; Started a self-paced deep-learning foundations refresher in parallel with thesis topic selection (target area: learned point-cloud / 3D Gaussian Splatting compression). Day 1 notes on what I caught myself getting wrong. <a href="#notes">notes &rarr;</a>
+        </li>
+        <li>
           <time datetime="2026-05-19">2026-05-19</time> &mdash; Ran a robustness ablation against the SINDy follow-up under non-polynomial sEMG (tanh saturation + fatigue drift + heteroscedastic noise). Prediction accuracy holds, but discovered equations nearly double in size &mdash; weakening the &ldquo;sparse polynomial a human can read&rdquo; framing from the day before. <a href="#notes">notes &rarr;</a>
         </li>
         <li>
@@ -317,6 +320,79 @@
     </p>
 
     <article>
+      <h3>Foundations refresher, day 1 &mdash; re-walking deep-learning basics before thesis kickoff</h3>
+      <p class="post-meta">2026-05-26 &mdash; self-paced study, in parallel with thesis topic selection in learned point-cloud / 3D Gaussian Splatting compression</p>
+
+      <p>
+        Before reading deeper into the learned-compression literature for thesis
+        work, I am running a structured re-walk through the foundations of deep
+        learning &mdash; slowly enough to actually look at each piece. The
+        PyTorch use in the sEMG project below sat on top of architectural priors
+        I had taken on trust; the goal of this refresher is to put those priors
+        back on first-principles ground before they become invisible scaffolding
+        under thesis-level work.
+      </p>
+
+      <p>
+        Day 1 covered the basics in one pass: what deep learning does mechanically
+        (rule-finding from examples rather than rule-writing), how a neural
+        network is structured (neuron &rarr; layer &rarr; depth as a feature
+        ladder), how training works (loss as a scalar, gradient descent as
+        blindfolded descent, learning rate as step size), and the overfitting /
+        underfitting distinction with the four standard remedies (more data, L2
+        regularisation, dropout, early stopping). The textbook material I won&rsquo;t
+        rehash. What is worth recording from a day 1 is what I caught myself
+        getting <em>wrong</em>:
+      </p>
+
+      <p>
+        <strong>Negative weights.</strong> I had been carrying the implicit
+        picture that a &ldquo;more important&rdquo; feature gets a larger
+        weight. Working through a toy &ldquo;should I go to the beach&rdquo;
+        example forced the point that <em>suppressing</em> a decision is just
+        as legitimate as supporting it, and the way a network represents
+        &ldquo;this feature pushes against the answer&rdquo; is a weight with
+        negative sign and large magnitude. Trivial in hindsight; not how I had
+        been visualising it.
+      </p>
+
+      <p>
+        <strong>Depth as a strict ladder, not a soft metaphor.</strong> I knew
+        &ldquo;deep&rdquo; meant many layers, and that early layers learn
+        simple features. What I had not internalised is that each layer&rsquo;s
+        <em>input vocabulary is literally the previous layer&rsquo;s output</em>.
+        Edges &rarr; shapes &rarr; eye &rarr; face isn&rsquo;t a slogan but the
+        actual data flow, and &ldquo;eye&rdquo; is just a stable activation in
+        some middle layer that the next layer uses as a primitive. That makes
+        depth a different kind of design choice than I had treated it as &mdash;
+        it controls the maximum composition height of the features the network
+        can express, not just the parameter count.
+      </p>
+
+      <p>
+        <strong>Underfitting &ne; a worse case of overfitting.</strong> Asked
+        to classify a hypothetical model with 70% train / 68% test accuracy,
+        I called it overfitting because both numbers looked bad. The correct
+        label is <em>underfitting</em>: both numbers being low <em>and close
+        to each other</em> points to insufficient capacity, not memorisation.
+        The two diseases need opposite treatments &mdash; underfitting wants
+        more capacity or longer training; overfitting wants regularisation,
+        dropout, or more data. Catching this confusion now is much cheaper
+        than catching it later, embedded in a real experiment where the data
+        and the architecture are both moving.
+      </p>
+
+      <p>
+        Day 2 will move into hand-writing a small model in PyTorch to make
+        the learning-rate and overfitting points concrete; from there into
+        CNNs, then into the learned-compression specifics (autoencoders,
+        quantisation, entropy coding, hyperprior) that the thesis area runs on.
+        Substantive updates to this site will probably come when those last
+        pieces start to load.
+      </p>
+
+      <hr style="border:0; border-top:1px solid var(--border); margin: 28px 0;"/>
+
       <h3>Robustness check: does SINDy still win when the generator isn&rsquo;t polynomial?</h3>
       <p class="post-meta">2026-05-19 &mdash; ablation on the SINDy follow-up below</p>
 
