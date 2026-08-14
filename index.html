@@ -235,17 +235,20 @@
     <h2>About</h2>
     <p>
       I am an M.Sc. Mechatronics student at <strong>FAU Erlangen–Nürnberg</strong>,
-      currently preparing thesis applications. My interests sit at the
-      intersection of <strong>deep learning, sequence modelling, and
-      physics-constrained systems</strong>: how to make learned models earn
-      their place inside a control loop without breaking the safety guarantees
-      a classical controller already provides. I work primarily in
-      <strong>PyTorch</strong>.
+      writing my thesis on <strong>learned point-cloud compression</strong>:
+      reproducing and extending a state-of-the-art neural codec for 3D point
+      cloud attributes (sparse convolutions, multiscale entropy models,
+      variable-rate conditioning). The daily work is equal parts research and
+      engineering &mdash; rate-distortion evaluation you can defend, and training
+      campaigns that survive a shared SLURM cluster. I work primarily in
+      <strong>PyTorch</strong> (MinkowskiEngine for sparse 3D).
     </p>
     <p>
-      Lately, my reading and thinking have been pulled toward
-      <strong>multimodal predictive systems</strong> as a direction I want
-      to explore &mdash; see <em>Research Statement</em> below.
+      Before that I explored learned prediction inside control loops
+      (sEMG-driven tele-impedance &mdash; see the notes below); the through-line
+      of both projects is the same question: <em>when can you trust a learned
+      model's numbers, and how do you build the instrumentation that tells
+      you?</em>
     </p>
   </section>
 
@@ -255,6 +258,15 @@
       <summary>Recent activity</summary>
       <ul class="activity-list">
         <!-- NEW ENTRIES GO HERE. Newest on top. Format: <li><time datetime="YYYY-MM-DD">YYYY-MM-DD</time> &mdash; one-line description. <a href="...">link &rarr;</a></li> -->
+        <li>
+          <time datetime="2026-08-14">2026-08-14</time> &mdash; Released <strong>pcc-eval-toolkit</strong>: gate-checked Bjontegaard metrics, a defensible single-point metric for fixed-rate codecs, and RD overlay plots &mdash; the evaluation discipline my thesis reproduction forced me to build. <a href="https://github.com/Tianhao1314/pcc-eval-toolkit">repo &rarr;</a>
+        </li>
+        <li>
+          <time datetime="2026-08-14">2026-08-14</time> &mdash; Released <strong>slurm-resilient-training</strong>: relay chains, durable checkpoints and single-writer guards that kept a multi-week point-cloud-codec training fleet alive on a 24h-walltime cluster with zero checkpoint loss. <a href="https://github.com/Tianhao1314/slurm-resilient-training">repo &rarr;</a>
+        </li>
+        <li>
+          <time datetime="2026-08-10">2026-08-10</time> &mdash; Thesis reproduction milestone: our from-scratch training of a learned point-cloud attribute codec now matches the authors' released models on the standard 8iVFB benchmark under a cross-calibrated evaluation protocol (both evaluation lines verified against each other point-by-point). Write-up to follow with the thesis. <a href="#notes">notes &rarr;</a>
+        </li>
         <li>
           <time datetime="2026-05-26">2026-05-26</time> &mdash; Started a self-paced deep-learning foundations refresher in parallel with thesis topic selection (target area: learned point-cloud / 3D Gaussian Splatting compression). Day 1 notes on what I caught myself getting wrong. <a href="#notes">notes &rarr;</a>
         </li>
@@ -318,6 +330,60 @@
       where my research thinking is, so I can point to it next time
       someone asks.
     </p>
+
+    <article>
+      <h3>What reproducing a learned codec taught me about honest evaluation</h3>
+      <p class="post-meta">2026-08-14 &mdash; thesis work, learned point-cloud attribute compression; tooling extracted into <a href="https://github.com/Tianhao1314/pcc-eval-toolkit">pcc-eval-toolkit</a> and <a href="https://github.com/Tianhao1314/slurm-resilient-training">slurm-resilient-training</a></p>
+
+      <p>
+        The headline task of my thesis sounds simple: take a state-of-the-art
+        learned point-cloud attribute codec, reproduce the paper's training
+        from scratch, then try to improve on it. Three months in, the thing I
+        would actually put on a slide is not a number &mdash; it is a list of ways
+        evaluation can quietly lie to you, and the instrumentation it took to
+        stop that.
+      </p>
+      <p>
+        <strong>Your benchmark is an instrument, and instruments need
+        calibration.</strong> Early on, our numbers and the paper's numbers
+        disagreed in ways that changed sign depending on which of our two
+        evaluation paths we used. The fix was metrological, not ML: run the
+        authors' released models through <em>our</em> pipeline and require
+        their published numbers to reproduce digit-for-digit before trusting
+        any measurement of our own models. That cross-calibration caught a
+        blocked-versus-whole-frame protocol difference, a color-space
+        convention mismatch at a model boundary, and a units convention in a
+        conditioning input &mdash; each worth more than a typical paper's claimed
+        improvement.
+      </p>
+      <p>
+        <strong>A refused metric is a result.</strong> BD-rate needs two
+        proper curves; a fixed-rate model gives you one point per sequence. My
+        first instinct &mdash; project the point onto the reference curve with a
+        local slope &mdash; was quietly assuming my own model's curve shape, and
+        my supervisor called it. The defensible version interpolates only the
+        reference curve, refuses to extrapolate, and says so in the plot
+        legend. I turned those refusal semantics into a small library, because
+        every compression project I have seen re-implements Bjontegaard badly
+        under deadline pressure.
+      </p>
+      <p>
+        <strong>Training reliability is an evaluation problem too.</strong>
+        Numbers are only comparable when the runs behind them are intact. On a
+        shared cluster with 24-hour walltime caps, keeping a fleet of 200+
+        epoch runs alive without a corrupted checkpoint took an explicit
+        design: chained jobs that reserve their successors, durable
+        checkpoints with epoch-indexed schedules, and a daemon enforcing that
+        one run never has two writers. All of it is in the second repo linked
+        above, with the incidents that motivated each piece.
+      </p>
+      <p>
+        The thesis results themselves &mdash; where the reproduction landed, and
+        what our checkpoint-averaging and finishing-schedule experiments
+        found &mdash; will be written up with the thesis. The tooling did not
+        need to wait.
+      </p>
+    </article>
 
     <article>
       <h3>Foundations refresher, day 1 &mdash; re-walking deep-learning basics before thesis kickoff</h3>
@@ -920,6 +986,12 @@
     <div class="links">
       <a class="link-card" href="https://github.com/Tianhao1314">
         <span>GitHub</span><span class="arrow">↗</span>
+      </a>
+      <a class="link-card" href="https://github.com/Tianhao1314/pcc-eval-toolkit">
+        <span>pcc-eval-toolkit</span><span class="arrow">↗</span>
+      </a>
+      <a class="link-card" href="https://github.com/Tianhao1314/slurm-resilient-training">
+        <span>slurm-resilient-training</span><span class="arrow">↗</span>
       </a>
       <a class="link-card" href="mailto:Tianhao.Wu.Mechatronik@outlook.com">
         <span>Email</span><span class="arrow">↗</span>
