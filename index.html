@@ -288,37 +288,53 @@
 
   <!-- RESEARCH STATEMENT -->
   <section id="research">
-    <h2>Research Statement</h2>
+    <h2>Thesis: Learned Point-Cloud Attribute Compression</h2>
     <p>
-      Working through a self-directed design-space study on sEMG-driven
-      impedance prediction taught me something I did not expect to find. The
-      architectural priors I tried &mdash; attention, physics-informed losses,
-      multi-modal inputs &mdash; genuinely improved prediction quality, and the
-      resulting models forecast trajectory and stiffness 100&ndash;200&nbsp;ms
-      ahead with millimeter-level error. The methods <em>worked</em>. But the
-      experience also exposed a deeper limitation: even a low-error learned
-      model, deployed in a real teleoperation loop, still has to defer to a
-      classical energy-based safety controller as a fallback &mdash; not because
-      the prediction is wrong, but because no one knows how to be accountable
-      for its decisions when the model itself is a black box.
+      <strong>The problem.</strong> Point clouds &mdash; millions of 3D points with
+      colors &mdash; are the raw material of AR/VR telepresence, autonomous
+      driving and cultural-heritage capture, and they are enormous: a single
+      human-scale frame is tens of megabytes uncompressed. MPEG standardizes
+      classical codecs (G-PCC) for them; the research frontier is
+      <em>learned</em> compression, where a sparse-convolutional network learns
+      the entropy model end-to-end and outperforms the standard by double-digit
+      BD-rate margins. My thesis reproduces a state-of-the-art learned
+      attribute codec from scratch and investigates improvements on top of it.
     </p>
     <p>
-      That interpretability gap is what I now find most interesting.
-      One natural candidate &mdash; causal machine learning &mdash; I have
-      not yet been able to map onto a workable interface with a
-      teleoperation control loop, in the reading I have done so far;
-      this impression is provisional and I expect it will sharpen as I
-      read more. The direction I am currently drawn toward &mdash; and
-      I want to be upfront, it is an area I am only beginning to read
-      into &mdash; is <strong>multimodal predictive systems</strong> in which the
-      model&rsquo;s predicted future is itself physically grounded,
-      observable, simulatable, and checkable.
-      If a prediction unfolds in 3D against a learned physics, the
-      question <em>&ldquo;is this prediction safe to act on?&rdquo;</em>
-      becomes answerable from the prediction itself, rather than delegated
-      to a classical filter bolted on beside it. I am not claiming I have
-      answers there yet; it is the direction I want to spend the next
-      phase exploring.
+      <strong>What the work actually involves.</strong> The codec is a
+      multiscale sparse-convolution autoencoder (MinkowskiEngine) with a
+      learned entropy bottleneck and variable-rate conditioning &mdash; one
+      network serving a whole rate-distortion curve. Reproducing it faithfully
+      meant rebuilding the authors&rsquo; training corpus from public mesh data,
+      matching their published recipe, and then closing the gap between
+      &ldquo;a training run that converges&rdquo; and &ldquo;a codec that matches the
+      paper&rdquo; &mdash; which turned out to hinge on training-finishing
+      technique (checkpoint averaging, learning-rate annealing schedules,
+      sampling curricula) far more than on architecture.
+    </p>
+    <p>
+      <strong>Verifiable claims, before the thesis is out.</strong> The result
+      numbers stay under wraps until the thesis is submitted, but two pillars
+      are already public and checkable: my evaluation pipeline
+      <em>reproduces the authors&rsquo; published rate-distortion table
+      digit-for-digit from their released model weights</em> &mdash; the
+      strongest calibration a reproduction can offer &mdash; and the evaluation
+      discipline it forced (Bjontegaard metrics that refuse invalid inputs,
+      single-point comparisons without extrapolation) is released as
+      <a href="https://github.com/Tianhao1314/pcc-eval-toolkit">pcc-eval-toolkit</a>.
+      The training reliability layer that kept 200&ndash;500-epoch runs alive on
+      a shared 24h-walltime cluster is released as
+      <a href="https://github.com/Tianhao1314/slurm-resilient-training">slurm-resilient-training</a>.
+    </p>
+    <p>
+      <strong>Beyond reproduction.</strong> The extension work studies
+      alternative entropy-model contexts (checkerboard two-pass spatial
+      context vs. channel-autoregressive designs, in controlled same-recipe
+      comparisons), balanced data-sampling to close per-sequence quality
+      gaps, and a systematic study of finishing recipes &mdash; when checkpoint
+      averaging helps, when annealing helps, and how the right choice depends
+      on where the weights start. Full results, code and weights will be
+      released with the thesis.
     </p>
   </section>
 
