@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>吴天昊 — 学习型点云压缩 · FAU 埃尔朗根-纽伦堡大学</title>
+  <meta name="description" content="吴天昊,FAU 机电一体化硕士,论文方向:学习型点云属性压缩(稀疏卷积、熵模型、变率编码)。2026 年毕业,求职点云/3D 压缩方向。" />
+  <style>
+    :root {
+      --accent: #1F3A68;
+      --muted: #5b6473;
+      --bg: #ffffff;
+      --bg-soft: #f5f7fa;
+      --border: #e3e8ef;
+      --text: #1a2332;
+      --link: #1F3A68;
+      --code-bg: #f1f4f8;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --accent: #7aa6e0;
+        --muted: #9aa5b8;
+        --bg: #0f1419;
+        --bg-soft: #161b22;
+        --border: #2a3038;
+        --text: #e6edf3;
+        --link: #7aa6e0;
+        --code-bg: #1c232b;
+      }
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      color: var(--text);
+      background: var(--bg);
+    }
+    main {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 48px 24px 64px;
+    }
+    /* Header */
+    header.hero {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      margin-bottom: 36px;
+      padding-bottom: 28px;
+      border-bottom: 1px solid var(--border);
+    }
+    header.hero img.portrait {
+      width: 96px;
+      height: 96px;
+      border-radius: 50%;
+      object-fit: cover;
+      flex-shrink: 0;
+      border: 1px solid var(--border);
+    }
+    header.hero h1 {
+      margin: 0 0 4px;
+      font-size: 28px;
+      letter-spacing: -0.01em;
+      color: var(--accent);
+    }
+    header.hero .tagline {
+      margin: 0 0 6px;
+      color: var(--muted);
+    }
+    header.hero .contact {
+      margin: 0;
+      font-size: 14px;
+      color: var(--muted);
+    }
+    header.hero .contact a {
+      color: var(--link);
+      text-decoration: none;
+    }
+    header.hero .contact a:hover { text-decoration: underline; }
+
+    /* Sections */
+    section { margin-bottom: 40px; }
+    h2 {
+      font-size: 13px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 6px;
+      margin: 0 0 18px;
+    }
+    h3 {
+      font-size: 20px;
+      margin: 0 0 4px;
+      color: var(--text);
+    }
+    .post-meta {
+      font-size: 13px;
+      color: var(--muted);
+      margin: 0 0 18px;
+    }
+    p { margin: 0 0 14px; }
+    a { color: var(--link); }
+    strong { color: var(--text); }
+
+    /* Figure */
+    figure {
+      margin: 24px 0;
+      padding: 16px;
+      background: var(--bg-soft);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+    figure svg { width: 100%; height: auto; display: block; }
+    figcaption {
+      font-size: 13px;
+      color: var(--muted);
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    /* Activity list */
+    .activity-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .activity-list li {
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 15px;
+      line-height: 1.55;
+    }
+    .activity-list li:last-child { border-bottom: none; }
+    .activity-list time {
+      color: var(--muted);
+      font-variant-numeric: tabular-nums;
+      margin-right: 4px;
+    }
+
+    /* Collapsible Recent activity — visually identical to h2, click to expand */
+    .activity-collapse > summary {
+      font-size: 13px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 6px;
+      margin: 0 0 18px;
+      cursor: pointer;
+      list-style: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      user-select: none;
+    }
+    .activity-collapse > summary::-webkit-details-marker { display: none; }
+    .activity-collapse > summary::before {
+      content: "\25B8"; /* ▸ */
+      display: inline-block;
+      font-size: 11px;
+      color: var(--muted);
+      transition: transform 0.15s ease;
+    }
+    .activity-collapse[open] > summary::before { transform: rotate(90deg); }
+    .activity-collapse > summary:hover { opacity: 0.85; }
+
+    /* CV / link cards */
+    .links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .link-card {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 16px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      text-decoration: none;
+      color: var(--text);
+      background: var(--bg-soft);
+      font-size: 14px;
+      transition: border-color 0.15s ease, transform 0.15s ease;
+    }
+    .link-card:hover { border-color: var(--accent); transform: translateY(-1px); }
+    .link-card .arrow { color: var(--accent); }
+
+    /* Footer */
+    footer {
+      margin-top: 56px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+      font-size: 13px;
+      color: var(--muted);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    footer a { color: var(--link); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+
+    @media (max-width: 540px) {
+      header.hero { flex-direction: column; text-align: center; gap: 16px; }
+      main { padding: 32px 18px 48px; }
+      h1 { font-size: 24px; }
+    }
+  </style>
+</head>
+<body>
+<main>
+  <header class="hero">
+    <img src="photo.png" alt="吴天昊" class="portrait" />
+    <div>
+      <h1>吴天昊 Tianhao Wu</h1>
+      <p class="tagline">机电一体化硕士在读 · FAU 埃尔朗根-纽伦堡大学(德国)</p>
+      <p class="contact">
+        <a href="mailto:Tianhao.Wu.Mechatronik@outlook.com">Tianhao.Wu.Mechatronik@outlook.com</a>
+        &nbsp;·&nbsp;<a href="https://github.com/Tianhao1314">GitHub</a>
+        &nbsp;·&nbsp;<a href="index.html">English</a>
+      </p>
+    </div>
+  </header>
+
+  <section>
+    <h2>简介</h2>
+    <p>
+      <strong>2026 年毕业,求职方向:点云 / 3D 压缩与神经编解码器。</strong>
+      硕士论文为<strong>学习型点云属性压缩</strong>:从零复现一个 SOTA 神经点云编码器并研究改进。
+      技术栈:PyTorch、MinkowskiEngine(稀疏 3D 卷积)、SLURM 集群、G-PCC / MPEG-PCC 评测体系。
+    </p>
+  </section>
+
+  <section>
+    <h2>论文工作(可公开部分)</h2>
+    <p>
+      <strong>问题</strong>:点云(数百万个带颜色的 3D 点)是 AR/VR、自动驾驶、数字文保的基础数据,
+      未压缩单帧数十 MB。MPEG 的 G-PCC 是标准编码器,学习型压缩是研究前沿,
+      BD-rate 可领先标准编码器两位数百分比。
+    </p>
+    <p>
+      <strong>做了什么</strong>:忠实复现多尺度稀疏卷积自编码器(学习熵模型 + 变率条件化)——
+      从公开网格数据重建训练语料、对齐发表配方,并系统研究训练收尾工艺
+      (checkpoint 平均、学习率退火、采样策略)对最终性能的决定性影响;
+      扩展研究包括熵模型上下文机制对照(棋盘格 vs 通道自回归)与均衡采样。
+    </p>
+    <p>
+      <strong>可验证的硬主张</strong>:我的评测管线用作者发布的模型权重
+      <em>逐位复现了其论文发表的率失真表格</em>——这是复现工作所能提供的最强标定。
+      具体结果数字随论文发布,完整代码与权重届时开源。
+    </p>
+  </section>
+
+  <section>
+    <h2>已开源的工作(附 CI)</h2>
+    <div class="links">
+      <a class="link-card" href="https://github.com/Tianhao1314/pcc-eval-toolkit">
+        <span>pcc-eval-toolkit — 率失真诚实评测工具箱</span><span class="arrow">↗</span>
+      </a>
+      <a class="link-card" href="https://github.com/Tianhao1314/slurm-resilient-training">
+        <span>slurm-resilient-training — 集群零丢失训练模式集</span><span class="arrow">↗</span>
+      </a>
+      <a class="link-card" href="https://github.com/Tianhao1314/semg-impedance-prediction">
+        <span>semg-impedance-prediction — 早期研究:序列模型×遥操作</span><span class="arrow">↗</span>
+      </a>
+    </div>
+    <p style="margin-top:14px;color:var(--muted);font-size:14px;">
+      两个主仓均为中英双语 README(顶部可切换),含 CI 自检与示例。
+      更完整的研究叙述见<a href="index.html">英文主页</a>。
+    </p>
+  </section>
+
+  <footer>
+    <div>&copy; 2026 吴天昊 · 德国埃尔朗根</div>
+    <div><a href="index.html">English version</a></div>
+  </footer>
+</main>
+</body>
+</html>
