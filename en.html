@@ -212,7 +212,23 @@
       main { padding: 32px 18px 48px; }
       h1 { font-size: 24px; }
     }
-  </style>
+  
+    /* --- thesis section --- */
+    .thesis-meta { color: var(--muted); font-size: 14px; margin: -4px 0 18px; }
+    .sub-h { font-size: 15.5px; font-weight: 700; color: var(--text);
+             margin: 26px 0 8px; }
+    ul.facts { list-style: none; padding: 0; margin: 10px 0 0; }
+    ul.facts li { padding: 10px 0; border-bottom: 1px solid var(--border);
+                  line-height: 1.65; }
+    ul.facts li:last-child { border-bottom: none; }
+    p.caveat { color: var(--muted); font-size: 14px; margin-top: 12px; }
+    .wip { background: var(--bg-soft); border-left: 3px solid var(--accent);
+           padding: 12px 16px; margin: 22px 0 0; line-height: 1.65; }
+    .stack { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+    .stack span { background: var(--bg-soft); border: 1px solid var(--border);
+                  border-radius: 4px; padding: 4px 10px; font-size: 13px;
+                  color: var(--muted); white-space: nowrap; }
+</style>
 </head>
 <body>
 <main>
@@ -291,54 +307,116 @@
   <!-- RESEARCH STATEMENT -->
   <section id="research">
     <h2>Thesis: Learned Point-Cloud Attribute Compression</h2>
+    <p class="thesis-meta">
+      <em>Point Cloud Attribute Compression with Improved Spatial Context Modeling</em>
+      &middot; FAU LMS &middot; June&ndash;December 2026
+    </p>
+
     <p>
       <strong>The problem.</strong> Point clouds &mdash; millions of 3D points with
-      colors &mdash; are the raw material of AR/VR telepresence, autonomous
-      driving and cultural-heritage capture, and they are enormous: a single
-      human-scale frame is tens of megabytes uncompressed. MPEG standardizes
-      classical codecs (G-PCC) for them; the research frontier is
-      <em>learned</em> compression, where a sparse-convolutional network learns
-      the entropy model end-to-end and outperforms the standard by double-digit
-      BD-rate margins. My thesis reproduces a state-of-the-art learned
-      attribute codec from scratch and investigates improvements on top of it.
+      colours &mdash; are the raw material of AR/VR telepresence, autonomous driving
+      and cultural-heritage capture, and a single human-scale frame is tens of
+      megabytes uncompressed. MPEG standardises classical codecs for them (G-PCC);
+      the research frontier is <em>learned</em> compression, where a
+      sparse-convolutional network learns the entropy model end to end. My thesis
+      rebuilds a state-of-the-art learned <strong>attribute</strong> codec from
+      scratch and works on its entropy model.
+    </p>
+
+    <div class="sub-h">What the codec actually is (what I wrote)</div>
+    <p>A whole pipeline, not a wrapper around someone's library:</p>
+    <ul class="facts">
+      <li><b>Voxelisation and multiscale representation</b> &mdash; points are
+        quantised onto an octree grid, giving a multiscale sparse tensor. The coarse
+        scale is a <b>free prior</b> for the fine one: the decoder has just
+        reconstructed it, so conditioning on it costs no bits.</li>
+      <li><b>Backbone</b> &mdash; analysis and synthesis transforms built from
+        multiscale <b>sparse convolution</b> (MinkowskiEngine, evaluated only where
+        points exist, because 99.9% of the voxel grid is empty), coding the attribute
+        <b>residual</b> scale by scale.</li>
+      <li><b>Conditional entropy model</b> &mdash; the network does not emit bits. It
+        predicts the <b>distribution parameters</b> of each latent (the location and
+        scale of a Laplacian), conditioned on the coarser scale and on already-decoded
+        colour channels.</li>
+      <li><b>Arithmetic coding</b> &mdash; turns those predicted probabilities into an
+        actual bitstream. Rate is the cross entropy between the predicted distribution
+        and the true symbols, so <b>the training objective and the final file size are
+        the same quantity</b>, not a proxy for it.</li>
+      <li><b>Variable rate</b> &mdash; one model covers the whole rate&ndash;distortion
+        curve instead of one model per rate point.</li>
+    </ul>
+    <p class="caveat">
+      The authors did <b>not</b> release training code for the attribute branch, so
+      this pipeline was rebuilt from the paper and the MPEG contribution documents.
+    </p>
+
+    <div class="sub-h">What is already verified</div>
+    <ul class="facts">
+      <li><b>Bit-exact round-trip</b> &mdash; encode &rarr; decode &rarr; re-encode
+        reproduces the bitstream <b>byte for byte</b>. This is the hardest available
+        test of whether an implementation is actually correct, and far stricter than
+        "the numbers look about right": the reconstruction may be lossy, the bitstream
+        may not drift.</li>
+      <li><b>Reproduced the authors' published rate&ndash;distortion table using their
+        released weights</b>, point by point &mdash; which establishes that the machine
+        and the ruler are both right, and that my evaluation matches theirs. It is the
+        strongest calibration a reproduction can offer.</li>
+      <li><b>From-scratch training</b> reaches a bitrate within <b>+0.9% bpp</b> of the
+        authors' published results (8iVFB v2).</li>
+      <li><b>Complexity is reported explicitly</b> &mdash; encoding +9.7%, decoding
+        +14.2%, <b>memory overhead &asymp; 0</b>. The improvement is built as a frozen
+        backbone plus an additive plug-in, because on an embedded accelerator memory is
+        the binding constraint.</li>
+    </ul>
+
+    <div class="sub-h">The most interesting finding</div>
+    <p>
+      From-scratch training started out clearly behind the published results. The gap
+      turned out <b>not</b> to be an implementation defect, the rate&ndash;distortion
+      weighting, the training schedule, or the capacity of the transform. It was
+      <b>the density statistics of the training corpus.</b>
     </p>
     <p>
-      <strong>What the work actually involves.</strong> The codec is a
-      multiscale sparse-convolution autoencoder (MinkowskiEngine) with a
-      learned entropy bottleneck and variable-rate conditioning &mdash; one
-      network serving a whole rate-distortion curve. Reproducing it faithfully
-      meant rebuilding the authors&rsquo; training corpus from public mesh data,
-      matching their published recipe, and then closing the gap between
-      &ldquo;a training run that converges&rdquo; and &ldquo;a codec that matches the
-      paper&rdquo; &mdash; which turned out to hinge on training-finishing
-      technique (checkpoint averaging, learning-rate annealing schedules,
-      sampling curricula) far more than on architecture.
+      The evidence is a <b>rank reversal</b>: with the same weights and the same
+      evaluation protocol, our model wins on our own corpus and the authors' model wins
+      on the standard test sequences. <b>A ranking that flips with the corpus is a
+      statement about the data distribution, not about the code.</b>
     </p>
     <p>
-      <strong>Verifiable claims, before the thesis is out.</strong> The result
-      numbers stay under wraps until the thesis is submitted, but two pillars
-      are already public and checkable: my evaluation pipeline
-      <em>reproduces the authors&rsquo; published rate-distortion table
-      digit-for-digit from their released model weights</em> &mdash; the
-      strongest calibration a reproduction can offer &mdash; and the evaluation
-      discipline it forced (Bjontegaard metrics that refuse invalid inputs,
-      single-point comparisons without extrapolation) is released as
-      <a href="https://github.com/Tianhao1314/pcc-eval-toolkit">pcc-eval-toolkit</a>.
-      The training reliability layer that kept 200&ndash;500-epoch runs alive on
-      a shared 24h-walltime cluster is released as
-      <a href="https://github.com/Tianhao1314/slurm-resilient-training">slurm-resilient-training</a>.
+      That produced a cheap diagnostic &mdash; a <b>corpus shift probe</b>: take
+      converged weights, fine-tune for <b>a single epoch</b> on a candidate corpus, and
+      measure how far the operating point is dragged. Before a week of GPU time goes
+      into it, you can tell whether a corpus is the distribution you will be evaluated
+      on. It touches only the dataset and contains no codec, which is why it can be
+      released on its own.
     </p>
     <p>
-      <strong>Beyond reproduction.</strong> The extension work studies
-      alternative entropy-model contexts (checkerboard two-pass spatial
-      context vs. channel-autoregressive designs, in controlled same-recipe
-      comparisons), balanced data-sampling to close per-sequence quality
-      gaps, and a systematic study of finishing recipes &mdash; when checkpoint
-      averaging helps, when annealing helps, and how the right choice depends
-      on where the weights start. Full results, code and weights will be
-      released with the thesis.
+      The same thread also mapped a <b>failure boundary</b>: the multiscale construction
+      degrades markedly on <b>sparse point clouds</b> &mdash; precisely the obstacle to
+      moving this family of methods from densely captured content to lidar data.
     </p>
-  </section>
+
+    <div class="wip">
+      <b>In progress, not yet a conclusion.</b> Carrying the <b>checkerboard spatial
+      context</b> from learned image compression over to sparse point cloud attribute
+      entropy coding: split by coordinate parity, decode anchors first and non-anchors
+      second, aiming to keep the context gain while reducing decoding from
+      <b>point-by-point serial to a constant number of passes</b>. So far this is a
+      single sequence at a single rate point with a single seed &mdash;
+      <b>that is not a BD-rate result and I do not report it as one.</b> The full
+      rate&ndash;distortion evaluation is under way.
+    </div>
+
+    <div class="sub-h">What this work actually runs on</div>
+    <div class="stack">
+      <span>PyTorch</span><span>sparse convolution / MinkowskiEngine</span>
+      <span>multiscale &amp; octree representations</span><span>conditional entropy models</span>
+      <span>arithmetic coding (torchac)</span><span>rate&ndash;distortion optimisation</span>
+      <span>bit-exact conformance checking</span><span>MPEG G-PCC / AI-PCC common test conditions</span>
+      <span>TMC13</span><span>pc_error</span><span>BD-rate / BD-PSNR</span>
+      <span>HPC / SLURM parallel training</span><span>reading and modifying C++ reference software</span>
+    </div>
+</section>
 
   <!-- NOTES -->
   <section id="notes">

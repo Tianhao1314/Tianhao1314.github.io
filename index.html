@@ -210,7 +210,23 @@
       main { padding: 32px 18px 48px; }
       h1 { font-size: 24px; }
     }
-  </style>
+  
+    /* --- thesis section --- */
+    .thesis-meta { color: var(--muted); font-size: 14px; margin: -4px 0 18px; }
+    .sub-h { font-size: 15.5px; font-weight: 700; color: var(--text);
+             margin: 26px 0 8px; }
+    ul.facts { list-style: none; padding: 0; margin: 10px 0 0; }
+    ul.facts li { padding: 10px 0; border-bottom: 1px solid var(--border);
+                  line-height: 1.65; }
+    ul.facts li:last-child { border-bottom: none; }
+    p.caveat { color: var(--muted); font-size: 14px; margin-top: 12px; }
+    .wip { background: var(--bg-soft); border-left: 3px solid var(--accent);
+           padding: 12px 16px; margin: 22px 0 0; line-height: 1.65; }
+    .stack { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+    .stack span { background: var(--bg-soft); border: 1px solid var(--border);
+                  border-radius: 4px; padding: 4px 10px; font-size: 13px;
+                  color: var(--muted); white-space: nowrap; }
+</style>
 </head>
 <body>
 <main>
@@ -262,37 +278,87 @@
 
   <section id="research">
     <h2>论文:学习型点云属性压缩</h2>
+    <p class="thesis-meta">
+      《基于改进空间上下文建模的学习式点云属性压缩》 &middot;
+      <em>Point Cloud Attribute Compression with Improved Spatial Context Modeling</em>
+      &middot; FAU LMS &middot; 2026.06 &ndash; 2026.12
+    </p>
+
     <p>
-      <strong>问题。</strong>点云——带颜色的数百万个 3D 点——是 AR/VR 远程呈现、
-      自动驾驶与文化遗产数字化的基础数据,而且体量巨大:一帧人体尺度的点云未压缩就有数十 MB。
-      MPEG 为其制定了经典编码标准(G-PCC);研究前沿是<em>学习型</em>压缩——
-      用稀疏卷积网络端到端地学习熵模型,BD-rate 领先标准编码器两位数百分比。
-      我的论文从零复现一个 SOTA 学习型属性编码器,并在其上研究改进。
+      <strong>问题。</strong>点云&mdash;&mdash;带颜色的数百万个 3D 点&mdash;&mdash;是 AR/VR 远程呈现、
+      自动驾驶与文化遗产数字化的基础数据,一帧人体尺度的点云未压缩就有数十 MB。
+      MPEG 为其制定了经典编码标准 G-PCC;研究前沿是<em>学习型</em>压缩:
+      用稀疏卷积网络端到端地学习熵模型。我的论文从零重建一个当前最好的学习型<strong>属性</strong>编码器,
+      并在它的熵模型上做改进。
+    </p>
+
+    <div class="sub-h">编解码器长什么样(我实际写了什么)</div>
+    <p>一条完整的链路,不是调包:</p>
+    <ul class="facts">
+      <li><b>体素化与多尺度表示</b> &mdash; 点云量化到八叉树网格,逐层构成多尺度稀疏张量。
+        粗尺度是细尺度的<b>免费先验</b>:解码端刚刚才把它解出来,拿来做条件不花一个比特。</li>
+      <li><b>主干</b> &mdash; 多尺度<b>稀疏卷积</b>(MinkowskiEngine,只在有点的位置计算,
+        因为体素网格里 99.9% 是空的)构成分析/合成变换,逐尺度编码属性<b>残差</b>。</li>
+      <li><b>条件熵模型</b> &mdash; 网络并不直接吐比特,它预测每个隐变量的<b>分布参数</b>
+        (Laplacian 的位置与尺度);条件来自跨尺度先验与跨颜色通道的已解码信息。</li>
+      <li><b>算术编码</b> &mdash; 把预测出来的概率兑换成真实码流。码率就是预测分布与真实符号的
+        交叉熵,所以<b>训练目标和最终文件大小是同一个量</b>,不是它的代理。</li>
+      <li><b>变率</b> &mdash; 单个模型覆盖整条率失真曲线,不必为每个码率点各训一个。</li>
+    </ul>
+    <p class="caveat">
+      作者<b>没有</b>公开属性分支的训练代码,所以这条链路是从论文正文与 MPEG 提案文档反推重建的。
+    </p>
+
+    <div class="sub-h">已经验证的部分</div>
+    <ul class="facts">
+      <li><b>比特级无损往返(bit-exact round-trip)</b> &mdash; 编码 &rarr; 解码 &rarr; 再编码,
+        码流<b>逐字节一致</b>。这是判断"实现到底对没对"最硬的标准,比"数值看着差不多"严格得多:
+        重建可以有损,码流不许漂。</li>
+      <li><b>用作者发布的权重复现了其论文的率失真表格</b>,逐点对齐 &mdash;
+        这说明机器和尺子都是对的,评测口径与作者一致。这是复现工作能提供的最强标定。</li>
+      <li><b>从零训练</b> &mdash; 所得码率距作者公布结果 <b>+0.9% bpp</b>(8iVFB v2 测试集)。</li>
+      <li><b>复杂度是显式报告的</b> &mdash; 编码 +9.7%、解码 +14.2%、<b>显存开销 &asymp; 0</b>。
+        改进采用"主干冻结 + 加性插件"的设计,因为在嵌入式加速器上,显存才是那条硬约束。</li>
+    </ul>
+
+    <div class="sub-h">最有意思的一个发现</div>
+    <p>
+      从零训练最初明显落后于作者的结果。排查之后,<b>差距不在实现缺陷、不在率失真权重、
+      不在训练时长、也不在变换容量 &mdash;&mdash; 在训练语料的密度统计。</b>
     </p>
     <p>
-      <strong>工作实际包含什么。</strong>该编码器是多尺度稀疏卷积自编码器(MinkowskiEngine),
-      带学习熵瓶颈与变率条件化——一张网络服务整条率失真曲线。忠实复现意味着:
-      用公开网格数据重建作者的训练语料、对齐其发表配方,然后跨过
-      "训练收敛了"与"编码器对齐论文了"之间的鸿沟——结果证明,
-      这道鸿沟的关键在<strong>训练收尾工艺</strong>(checkpoint 平均、学习率退火调度、采样课程),
-      远甚于网络结构本身。
+      支撑它的证据是一次<b>排名反转</b>:同一套权重、同一套评测口径,
+      在我方自建语料上我方模型更好,换到标准测试序列上作者模型更好。
+      <b>排名随语料翻转,说明差距来自数据分布,而不是代码。</b>
     </p>
     <p>
-      <strong>论文发布前就可验证的主张。</strong>结果数字在论文提交前保密,
-      但两根支柱已经公开可查:我的评测管线<em>用作者发布的模型权重逐位复现了其论文发表的率失真表格</em>——
-      这是复现工作所能提供的最强标定;它逼出来的评测纪律
-      (拒绝无效输入的 Bjontegaard 指标、禁止外推的单点对比)已开源为
-      <a href="https://github.com/Tianhao1314/pcc-eval-toolkit">pcc-eval-toolkit</a>;
-      支撑 200–500 epoch 训练在共享 24h 墙钟集群上存活的可靠性层已开源为
-      <a href="https://github.com/Tianhao1314/slurm-resilient-training">slurm-resilient-training</a>。
+      由此做出一把便宜的诊断工具 &mdash;&mdash; <b>语料位移探针</b>:
+      拿已经收敛的权重,在候选语料上<b>只训 1 个 epoch</b>,测工作点被拖动多远。
+      在投进一周 GPU 时间之前,就能判断这批数据是不是你将要被评测的那个分布。
+      它只作用于数据集本身、不含任何编解码器,因此可以独立开源。
     </p>
     <p>
-      <strong>复现之上。</strong>扩展研究包括:熵模型上下文机制的受控同配方对照
-      (棋盘格两遍空间上下文 vs 通道自回归设计)、用均衡数据采样收窄序列间质量差距,
-      以及收尾工艺的系统研究——checkpoint 平均何时有效、退火何时有效、
-      正确选择如何取决于权重的起点状态。完整结果、代码与权重随论文发布。
+      同一条线索还测出一条<b>失效边界</b>:多尺度构造在<b>稀疏点云</b>上显著退化。
+      这正是把这类方法从稠密采集内容搬向激光雷达数据时的核心障碍。
     </p>
-  </section>
+
+    <div class="wip">
+      <b>进行中,尚未成为结论。</b>把图像压缩里的 <b>checkerboard 空间上下文</b>
+      迁移到稀疏点云的属性熵编码上:按坐标奇偶分两批,先解锚点、再解非锚点,
+      目标是保住上下文增益的同时,把解码从<b>逐点串行降到常数遍</b>。
+      目前只有单序列、单码率点、单随机种子的初步数字 &mdash;&mdash;
+      <b>这不是 BD-rate 结果,我也不把它当作 BD-rate 报告。</b>完整的率失真评测正在进行。
+    </div>
+
+    <div class="sub-h">这套工作实际用到的东西</div>
+    <div class="stack">
+      <span>PyTorch</span><span>稀疏卷积 / MinkowskiEngine</span><span>多尺度 &amp; 八叉树表示</span>
+      <span>条件熵模型</span><span>算术编码 (torchac)</span><span>率失真优化</span>
+      <span>比特级一致性验证</span><span>MPEG G-PCC / AI-PCC 通用测试条件</span>
+      <span>TMC13</span><span>pc_error</span><span>BD-rate / BD-PSNR</span>
+      <span>HPC / SLURM 多臂并行训练</span><span>C++ 参考软件阅读与改造</span>
+    </div>
+</section>
 
   <section id="notes">
     <h2>笔记</h2>
