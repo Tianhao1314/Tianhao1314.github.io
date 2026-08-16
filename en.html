@@ -1,11 +1,13 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>吴天昊 — 学习型点云压缩 · FAU 埃尔朗根-纽伦堡大学</title>
-  <meta name="description" content="吴天昊,FAU 机电一体化硕士,论文方向:学习型点云属性压缩。2026 年毕业,求职点云/3D 压缩方向。" />
-<style>
+  <title>Tianhao Wu — M.Sc. Mechatronics, FAU Erlangen-Nürnberg</title>
+  <meta name="description" content="Personal site of Tianhao Wu — M.Sc. Mechatronics student at FAU Erlangen-Nürnberg. Deep learning for signals, robotics, and 3D data; PyTorch, sequence models, physics-constrained learning." />
+  <meta property="og:title" content="Tianhao Wu — Mechatronics & Deep Learning, FAU" />
+  <meta property="og:description" content="Self-directed research notes and project sketches. PyTorch, sequence models, multi-modal sensor fusion, physics-constrained deep learning." />
+  <style>
     :root {
       --accent: #1F3A68;
       --muted: #5b6473;
@@ -214,128 +216,195 @@
 </head>
 <body>
 <main>
+  <!-- HEADER -->
   <header class="hero">
-    <img src="photo.png" alt="吴天昊" class="portrait" />
+    <img src="photo.png" alt="Portrait of Tianhao Wu" class="portrait" />
     <div>
-      <h1>吴天昊 Tianhao Wu</h1>
-      <p class="tagline">机电一体化硕士在读 · FAU 埃尔朗根-纽伦堡大学(德国)</p>
+      <h1>Tianhao Wu</h1>
+      <p class="tagline">M.Sc. Mechatronics, FAU Erlangen–Nürnberg</p>
       <p class="contact">
         <a href="mailto:Tianhao.Wu.Mechatronik@outlook.com">Tianhao.Wu.Mechatronik@outlook.com</a>
-        &nbsp;·&nbsp;<a href="https://github.com/Tianhao1314">GitHub</a>
-        &nbsp;·&nbsp;<a href="en.html">English</a>
+        &nbsp;·&nbsp;
+        <a href="https://github.com/Tianhao1314">GitHub</a>
+        &nbsp;&middot;&nbsp;
+        <a href="./">中文</a>
       </p>
     </div>
   </header>
 
+  <!-- ABOUT -->
   <section id="about">
-    <h2>关于</h2>
+    <h2>About</h2>
     <p>
-      我是 <strong>FAU 埃尔朗根-纽伦堡大学</strong>机电一体化专业硕士生,
-      论文方向为<strong>学习型点云压缩</strong>:从零复现并扩展一个 SOTA 的
-      3D 点云属性神经编码器(稀疏卷积、多尺度熵模型、变率条件化)。
-      日常工作一半是研究、一半是工程——经得起推敲的率失真评测,
-      和能在共享 SLURM 集群上活下来的训练战役。主力技术栈为
-      <strong>PyTorch</strong>(稀疏 3D 用 MinkowskiEngine)。
+      I am an M.Sc. Mechatronics student at <strong>FAU Erlangen–Nürnberg</strong>,
+      writing my thesis on <strong>learned point-cloud compression</strong>:
+      reproducing and extending a state-of-the-art neural codec for 3D point
+      cloud attributes (sparse convolutions, multiscale entropy models,
+      variable-rate conditioning). The daily work is equal parts research and
+      engineering &mdash; rate-distortion evaluation you can defend, and training
+      campaigns that survive a shared SLURM cluster. I work primarily in
+      <strong>PyTorch</strong> (MinkowskiEngine for sparse 3D).
     </p>
     <p>
-      在此之前我研究过控制回路内的学习型预测
-      (sEMG 驱动的遥操作阻抗预测——见下方笔记存档);两段工作的共同主线是同一个问题:
-      <em>什么时候可以信任一个学习模型给出的数字,以及如何搭建能回答这个问题的测量体系?</em>
+      Before that I explored learned prediction inside control loops
+      (sEMG-driven tele-impedance &mdash; see the notes below); the through-line
+      of both projects is the same question: <em>when can you trust a learned
+      model's numbers, and how do you build the instrumentation that tells
+      you?</em>
     </p>
   </section>
 
+  <!-- RECENT ACTIVITY -->
   <section id="activity">
     <details class="activity-collapse">
-      <summary>近期动态</summary>
+      <summary>Recent activity</summary>
       <ul class="activity-list">
         <!-- NEW ENTRIES GO HERE. Newest on top. Format: <li><time datetime="YYYY-MM-DD">YYYY-MM-DD</time> &mdash; one-line description. <a href="...">link &rarr;</a></li> -->
-        <li><time datetime="2026-08-14">2026-08-14</time> — 发布 <strong>pcc-eval-toolkit</strong>:带硬性有效性门槛的 Bjontegaard 指标、面向定率编码器的可辩护单点度量、RD 对比图——论文复现工作逼出来的评测纪律。 <a href="https://github.com/Tianhao1314/pcc-eval-toolkit">仓库 →</a></li>
-        <li><time datetime="2026-08-14">2026-08-14</time> — 发布 <strong>slurm-resilient-training</strong>:接力式作业链、durable 断点、单写者守护——支撑数周点云编码器训练车队在 24h 墙钟集群上零断点丢失。 <a href="https://github.com/Tianhao1314/slurm-resilient-training">仓库 →</a></li>
-        <li><time datetime="2026-08-10">2026-08-10</time> — 论文复现里程碑:我们从零训练的点云属性编码器,在标准 8iVFB 基准上、经交叉标定的评测协议下,达到作者发布模型的水平(两条评测线已逐点互验)。完整写作随论文发布。 <a href="#notes">笔记 →</a></li>
-        <li><time datetime="2026-05-26">2026-05-26</time> — 在论文选题(学习型点云 / 3D 高斯泼溅压缩)并行期,开始自定进度的深度学习基础重修;第一天的纠错笔记见存档。</li>
-        <li><time datetime="2026-05-19">2026-05-19</time> — 对 SINDy 后续研究做非多项式生成器下的稳健性消融(tanh 饱和 + 疲劳漂移 + 异方差噪声)。</li>
-        <li><time datetime="2026-05-18">2026-05-18</time> — 在 sEMG 阻抗项目中把 SINDy 重构为"动力学发现 + 前向积分";短时程预测超过 LSTM。 <a href="https://github.com/Tianhao1314/semg-impedance-prediction">仓库 →</a></li>
-        <li><time datetime="2026-05-16">2026-05-16</time> — 开源 sEMG 驱动阻抗预测的设计空间研究(5 模型 × 3 时程,含消融与 MC-Dropout 安全性分析)。 <a href="https://github.com/Tianhao1314/semg-impedance-prediction">仓库 →</a></li>
+        <li>
+          <time datetime="2026-08-14">2026-08-14</time> &mdash; Released <strong>pcc-eval-toolkit</strong>: gate-checked Bjontegaard metrics, a defensible single-point metric for fixed-rate codecs, and RD overlay plots &mdash; the evaluation discipline my thesis reproduction forced me to build. <a href="https://github.com/Tianhao1314/pcc-eval-toolkit">repo &rarr;</a>
+        </li>
+        <li>
+          <time datetime="2026-08-14">2026-08-14</time> &mdash; Released <strong>slurm-resilient-training</strong>: relay chains, durable checkpoints and single-writer guards that kept a multi-week point-cloud-codec training fleet alive on a 24h-walltime cluster with zero checkpoint loss. <a href="https://github.com/Tianhao1314/slurm-resilient-training">repo &rarr;</a>
+        </li>
+        <li>
+          <time datetime="2026-08-10">2026-08-10</time> &mdash; Thesis reproduction milestone: our from-scratch training of a learned point-cloud attribute codec now matches the authors' released models on the standard 8iVFB benchmark under a cross-calibrated evaluation protocol (both evaluation lines verified against each other point-by-point). Write-up to follow with the thesis. <a href="#notes">notes &rarr;</a>
+        </li>
+        <li>
+          <time datetime="2026-05-26">2026-05-26</time> &mdash; Started a self-paced deep-learning foundations refresher in parallel with thesis topic selection (target area: learned point-cloud / 3D Gaussian Splatting compression). Day 1 notes on what I caught myself getting wrong. <a href="#notes">notes &rarr;</a>
+        </li>
+        <li>
+          <time datetime="2026-05-19">2026-05-19</time> &mdash; Ran a robustness ablation against the SINDy follow-up under non-polynomial sEMG (tanh saturation + fatigue drift + heteroscedastic noise). Prediction accuracy holds, but discovered equations nearly double in size &mdash; weakening the &ldquo;sparse polynomial a human can read&rdquo; framing from the day before. <a href="#notes">notes &rarr;</a>
+        </li>
+        <li>
+          <time datetime="2026-05-18">2026-05-18</time> &mdash; Reframed SINDy as dynamics discovery + forward integration in the sEMG impedance project; sparse polynomial predictions beat LSTM at short horizons. <a href="https://github.com/Tianhao1314/semg-impedance-prediction">repo &rarr;</a>
+        </li>
+        <li>
+          <time datetime="2026-05-17">2026-05-17</time> &mdash; Posted a self-directed reflection on multimodal predictive systems for action-time prediction (<a href="#notes">below</a>).
+        </li>
+        <li>
+          <time datetime="2026-05-16">2026-05-16</time> &mdash; Published an open-source design-space study on sEMG-driven impedance prediction (5 models &times; 3 horizons, ablations + MC-Dropout safety). <a href="https://github.com/Tianhao1314/semg-impedance-prediction">repo &rarr;</a>
+        </li>
       </ul>
     </details>
   </section>
 
+  <!-- RESEARCH STATEMENT -->
   <section id="research">
-    <h2>论文:学习型点云属性压缩</h2>
+    <h2>Thesis: Learned Point-Cloud Attribute Compression</h2>
     <p>
-      <strong>问题。</strong>点云——带颜色的数百万个 3D 点——是 AR/VR 远程呈现、
-      自动驾驶与文化遗产数字化的基础数据,而且体量巨大:一帧人体尺度的点云未压缩就有数十 MB。
-      MPEG 为其制定了经典编码标准(G-PCC);研究前沿是<em>学习型</em>压缩——
-      用稀疏卷积网络端到端地学习熵模型,BD-rate 领先标准编码器两位数百分比。
-      我的论文从零复现一个 SOTA 学习型属性编码器,并在其上研究改进。
+      <strong>The problem.</strong> Point clouds &mdash; millions of 3D points with
+      colors &mdash; are the raw material of AR/VR telepresence, autonomous
+      driving and cultural-heritage capture, and they are enormous: a single
+      human-scale frame is tens of megabytes uncompressed. MPEG standardizes
+      classical codecs (G-PCC) for them; the research frontier is
+      <em>learned</em> compression, where a sparse-convolutional network learns
+      the entropy model end-to-end and outperforms the standard by double-digit
+      BD-rate margins. My thesis reproduces a state-of-the-art learned
+      attribute codec from scratch and investigates improvements on top of it.
     </p>
     <p>
-      <strong>工作实际包含什么。</strong>该编码器是多尺度稀疏卷积自编码器(MinkowskiEngine),
-      带学习熵瓶颈与变率条件化——一张网络服务整条率失真曲线。忠实复现意味着:
-      用公开网格数据重建作者的训练语料、对齐其发表配方,然后跨过
-      "训练收敛了"与"编码器对齐论文了"之间的鸿沟——结果证明,
-      这道鸿沟的关键在<strong>训练收尾工艺</strong>(checkpoint 平均、学习率退火调度、采样课程),
-      远甚于网络结构本身。
+      <strong>What the work actually involves.</strong> The codec is a
+      multiscale sparse-convolution autoencoder (MinkowskiEngine) with a
+      learned entropy bottleneck and variable-rate conditioning &mdash; one
+      network serving a whole rate-distortion curve. Reproducing it faithfully
+      meant rebuilding the authors&rsquo; training corpus from public mesh data,
+      matching their published recipe, and then closing the gap between
+      &ldquo;a training run that converges&rdquo; and &ldquo;a codec that matches the
+      paper&rdquo; &mdash; which turned out to hinge on training-finishing
+      technique (checkpoint averaging, learning-rate annealing schedules,
+      sampling curricula) far more than on architecture.
     </p>
     <p>
-      <strong>论文发布前就可验证的主张。</strong>结果数字在论文提交前保密,
-      但两根支柱已经公开可查:我的评测管线<em>用作者发布的模型权重逐位复现了其论文发表的率失真表格</em>——
-      这是复现工作所能提供的最强标定;它逼出来的评测纪律
-      (拒绝无效输入的 Bjontegaard 指标、禁止外推的单点对比)已开源为
-      <a href="https://github.com/Tianhao1314/pcc-eval-toolkit">pcc-eval-toolkit</a>;
-      支撑 200–500 epoch 训练在共享 24h 墙钟集群上存活的可靠性层已开源为
-      <a href="https://github.com/Tianhao1314/slurm-resilient-training">slurm-resilient-training</a>。
+      <strong>Verifiable claims, before the thesis is out.</strong> The result
+      numbers stay under wraps until the thesis is submitted, but two pillars
+      are already public and checkable: my evaluation pipeline
+      <em>reproduces the authors&rsquo; published rate-distortion table
+      digit-for-digit from their released model weights</em> &mdash; the
+      strongest calibration a reproduction can offer &mdash; and the evaluation
+      discipline it forced (Bjontegaard metrics that refuse invalid inputs,
+      single-point comparisons without extrapolation) is released as
+      <a href="https://github.com/Tianhao1314/pcc-eval-toolkit">pcc-eval-toolkit</a>.
+      The training reliability layer that kept 200&ndash;500-epoch runs alive on
+      a shared 24h-walltime cluster is released as
+      <a href="https://github.com/Tianhao1314/slurm-resilient-training">slurm-resilient-training</a>.
     </p>
     <p>
-      <strong>复现之上。</strong>扩展研究包括:熵模型上下文机制的受控同配方对照
-      (棋盘格两遍空间上下文 vs 通道自回归设计)、用均衡数据采样收窄序列间质量差距,
-      以及收尾工艺的系统研究——checkpoint 平均何时有效、退火何时有效、
-      正确选择如何取决于权重的起点状态。完整结果、代码与权重随论文发布。
+      <strong>Beyond reproduction.</strong> The extension work studies
+      alternative entropy-model contexts (checkerboard two-pass spatial
+      context vs. channel-autoregressive designs, in controlled same-recipe
+      comparisons), balanced data-sampling to close per-sequence quality
+      gaps, and a systematic study of finishing recipes &mdash; when checkpoint
+      averaging helps, when annealing helps, and how the right choice depends
+      on where the weights start. Full results, code and weights will be
+      released with the thesis.
     </p>
   </section>
 
+  <!-- NOTES -->
   <section id="notes">
-    <h2>笔记</h2>
+    <h2>Notes</h2>
     <p style="color: var(--muted); font-style: italic; margin-bottom: 24px;">
-      算不上博客,只是把研究思考的阶段性写作留档,下次有人问起时可以直接指过去。
+      Not quite a blog. Just a place to leave the occasional write-up of
+      where my research thinking is, so I can point to it next time
+      someone asks.
     </p>
 
     <article>
-      <h3>复现一个学习型编码器教会我的"诚实评测"</h3>
-      <p class="post-meta">2026-08-14 — 论文工作,学习型点云属性压缩;工具已提炼为 <a href="https://github.com/Tianhao1314/pcc-eval-toolkit">pcc-eval-toolkit</a> 与 <a href="https://github.com/Tianhao1314/slurm-resilient-training">slurm-resilient-training</a></p>
+      <h3>What reproducing a learned codec taught me about honest evaluation</h3>
+      <p class="post-meta">2026-08-14 &mdash; thesis work, learned point-cloud attribute compression; tooling extracted into <a href="https://github.com/Tianhao1314/pcc-eval-toolkit">pcc-eval-toolkit</a> and <a href="https://github.com/Tianhao1314/slurm-resilient-training">slurm-resilient-training</a></p>
+
       <p>
-        论文的核心任务听起来很简单:拿一个 SOTA 学习型点云属性编码器,从零复现其训练,然后尝试改进。
-        三个月下来,我真正想放上幻灯片的不是某个数字——而是一份"评测会怎样悄悄骗你"的清单,
-        以及为阻止它而搭建的测量体系。
+        The headline task of my thesis sounds simple: take a state-of-the-art
+        learned point-cloud attribute codec, reproduce the paper's training
+        from scratch, then try to improve on it. Three months in, the thing I
+        would actually put on a slide is not a number &mdash; it is a list of ways
+        evaluation can quietly lie to you, and the instrumentation it took to
+        stop that.
       </p>
       <p>
-        <strong>基准是一台仪器,而仪器需要标定。</strong>早期我们的数字与论文数字的分歧,
-        会随着用哪条评测路径而变号。解法是计量学的,不是机器学习的:
-        把作者发布的模型跑过<em>我们的</em>管线,要求其发表数字逐位复现,然后才信任对我们自己模型的任何测量。
-        这次交叉标定抓出了分块-整帧协议差异、模型边界处的色彩空间约定不匹配、
-        条件输入的单位约定——每一个的影响都超过一篇典型论文声称的改进量。
+        <strong>Your benchmark is an instrument, and instruments need
+        calibration.</strong> Early on, our numbers and the paper's numbers
+        disagreed in ways that changed sign depending on which of our two
+        evaluation paths we used. The fix was metrological, not ML: run the
+        authors' released models through <em>our</em> pipeline and require
+        their published numbers to reproduce digit-for-digit before trusting
+        any measurement of our own models. That cross-calibration caught a
+        blocked-versus-whole-frame protocol difference, a color-space
+        convention mismatch at a model boundary, and a units convention in a
+        conditioning input &mdash; each worth more than a typical paper's claimed
+        improvement.
       </p>
       <p>
-        <strong>被拒绝的度量也是结果。</strong>BD-rate 需要两条合格曲线;定率模型每个序列只有一个点。
-        我的第一反应——用局部斜率把点投影到参考曲线上——其实是在悄悄假设自己模型的曲线形状,被导师指了出来。
-        可辩护的版本只在参考曲线上插值、拒绝外推、并在图例里明说。我把这套拒绝语义做成了小型库,
-        因为我见过的每个压缩项目都在截稿压力下把 Bjontegaard 重新实现得很糟。
+        <strong>A refused metric is a result.</strong> BD-rate needs two
+        proper curves; a fixed-rate model gives you one point per sequence. My
+        first instinct &mdash; project the point onto the reference curve with a
+        local slope &mdash; was quietly assuming my own model's curve shape, and
+        my supervisor called it. The defensible version interpolates only the
+        reference curve, refuses to extrapolate, and says so in the plot
+        legend. I turned those refusal semantics into a small library, because
+        every compression project I have seen re-implements Bjontegaard badly
+        under deadline pressure.
       </p>
       <p>
-        <strong>训练可靠性也是评测问题。</strong>只有背后的训练完好无损,数字才有可比性。
-        在 24h 墙钟的共享集群上,让一支 200+ epoch 的训练车队不出一个损坏 checkpoint,
-        需要一套显式设计:启动即预约继任者的作业链、epoch 索引调度的 durable 断点、
-        以及强制"一条训练线永远只有一个写者"的守护进程。全部内容连同促成它们的事故记录,
-        都在上面链接的第二个仓库里。
+        <strong>Training reliability is an evaluation problem too.</strong>
+        Numbers are only comparable when the runs behind them are intact. On a
+        shared cluster with 24-hour walltime caps, keeping a fleet of 200+
+        epoch runs alive without a corrupted checkpoint took an explicit
+        design: chained jobs that reserve their successors, durable
+        checkpoints with epoch-indexed schedules, and a daemon enforcing that
+        one run never has two writers. All of it is in the second repo linked
+        above, with the incidents that motivated each piece.
       </p>
       <p>
-        论文结果本身——复现最终落在哪里,以及 checkpoint 平均与收尾调度实验的发现——将随论文一起写出。
-        工具不必等待。
+        The thesis results themselves &mdash; where the reproduction landed, and
+        what our checkpoint-averaging and finishing-schedule experiments
+        found &mdash; will be written up with the thesis. The tooling did not
+        need to wait.
       </p>
     </article>
 
     <details class="activity-collapse">
-      <summary>早期研究笔记存档 &mdash; 控制、遥操作与 sEMG(2026-05;保留英文原文)</summary>
+      <summary>Earlier research notes &mdash; control, teleoperation &amp; sEMG (2026-05 archive)</summary>
     <article>
       <h3>Foundations refresher, day 1 &mdash; re-walking deep-learning basics before thesis kickoff</h3>
       <p class="post-meta">2026-05-26 &mdash; self-paced study, in parallel with thesis topic selection in learned point-cloud / 3D Gaussian Splatting compression</p>
@@ -933,19 +1002,29 @@
     </details>
   </section>
 
+  <!-- LINKS -->
   <section id="links">
-    <h2>链接</h2>
+    <h2>Links</h2>
     <div class="links">
-      <a class="link-card" href="https://github.com/Tianhao1314"><span>GitHub</span><span class="arrow">↗</span></a>
-      <a class="link-card" href="https://github.com/Tianhao1314/pcc-eval-toolkit"><span>pcc-eval-toolkit</span><span class="arrow">↗</span></a>
-      <a class="link-card" href="https://github.com/Tianhao1314/slurm-resilient-training"><span>slurm-resilient-training</span><span class="arrow">↗</span></a>
-      <a class="link-card" href="mailto:Tianhao.Wu.Mechatronik@outlook.com"><span>邮箱</span><span class="arrow">↗</span></a>
+      <a class="link-card" href="https://github.com/Tianhao1314">
+        <span>GitHub</span><span class="arrow">↗</span>
+      </a>
+      <a class="link-card" href="https://github.com/Tianhao1314/pcc-eval-toolkit">
+        <span>pcc-eval-toolkit</span><span class="arrow">↗</span>
+      </a>
+      <a class="link-card" href="https://github.com/Tianhao1314/slurm-resilient-training">
+        <span>slurm-resilient-training</span><span class="arrow">↗</span>
+      </a>
+      <a class="link-card" href="mailto:Tianhao.Wu.Mechatronik@outlook.com">
+        <span>Email</span><span class="arrow">↗</span>
+      </a>
     </div>
   </section>
 
+  <!-- FOOTER -->
   <footer>
-    <div>&copy; 2026 吴天昊 · 德国埃尔朗根</div>
-    <div>纯 HTML 构建 · <a href="https://github.com/Tianhao1314/Tianhao1314.github.io">源码</a> · <a href="en.html">English</a></div>
+    <div>&copy; 2026 Tianhao Wu &middot; Erlangen, Germany</div>
+    <div>Built as plain HTML &middot; <a href="https://github.com/Tianhao1314/Tianhao1314.github.io">source</a></div>
   </footer>
 </main>
 </body>
